@@ -1,11 +1,11 @@
-
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Chat } from '@google/genai';
+import React, { useState, useCallback } from 'react';
 import { Message, GroundingChunk } from './types';
-import { createChatSession } from './services/geminiService';
+import { sendMessageToServer } from './services/geminiService';
 import Header from './components/Header';
 import ChatWindow from './components/ChatWindow';
 import InputBar from './components/InputBar';
+
+const CHUNK_SEPARATOR = '__END_OF_CHUNK__';
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -18,12 +18,6 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const chatSessionRef = useRef<Chat | null>(null);
-
-  useEffect(() => {
-    chatSessionRef.current = createChatSession();
-  }, []);
-
   const handleSendMessage = useCallback(async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
 
@@ -31,37 +25,62 @@ const App: React.FC = () => {
     setError(null);
 
     const userMessage: Message = { role: 'user', parts: [{ text: messageText }] };
-    setMessages(prevMessages => [...prevMessages, userMessage]);
+    const currentMessages = [...messages, userMessage];
+    setMessages(currentMessages);
     setUserInput('');
 
     try {
-      if (!chatSessionRef.current) {
-        throw new Error('Chat session not initialized.');
+      // The history sent to the backend should not include the initial welcome message
+      const history = messages.slice(1);
+      const stream = await sendMessageToServer(history, messageText);
+      
+      if (!stream) {
+        throw new Error('Failed to get response stream.');
       }
 
-      const stream = await chatSessionRef.current.sendMessageStream({ message: messageText });
-
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      
       let modelResponse = '';
       const groundingChunks: GroundingChunk[] = [];
       setMessages(prev => [...prev, { role: 'model', parts: [{ text: '' }] }]);
 
-      for await (const chunk of stream) {
-        const chunkText = chunk.text;
-        if (chunkText) {
-          modelResponse += chunkText;
-          setMessages(prev => {
-            const newMessages = [...prev];
-            newMessages[newMessages.length - 1].parts[0].text = modelResponse;
-            return newMessages;
-          });
-        }
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split(CHUNK_SEPARATOR);
         
-        const newChunks = chunk.candidates?.[0]?.groundingMetadata?.groundingChunks;
-        if (newChunks) {
-          for (const chunkData of newChunks) {
-             if (chunkData.web?.uri && !groundingChunks.some(c => c.web?.uri === chunkData.web.uri)) {
-                groundingChunks.push(chunkData);
-             }
+        // The last part may be incomplete, so we keep it in the buffer
+        buffer = parts.pop() || '';
+
+        for (const part of parts) {
+          if (part) {
+            try {
+              const parsedChunk = JSON.parse(part);
+              
+              if (parsedChunk.text) {
+                modelResponse += parsedChunk.text;
+                setMessages(prev => {
+                  const newMessages = [...prev];
+                  newMessages[newMessages.length - 1].parts[0].text = modelResponse;
+                  return newMessages;
+                });
+              }
+
+              if (parsedChunk.groundingChunks) {
+                for (const chunkData of parsedChunk.groundingChunks) {
+                  if (chunkData.web?.uri && !groundingChunks.some(c => c.web?.uri === chunkData.web.uri)) {
+                    groundingChunks.push(chunkData);
+                  }
+                }
+              }
+
+            } catch (e) {
+              console.error("Failed to parse chunk:", part, e);
+            }
           }
         }
       }
@@ -85,7 +104,7 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [isLoading]);
+  }, [isLoading, messages]);
 
   return (
     <div className="bg-slate-100 dark:bg-slate-900 font-sans h-screen w-screen flex flex-col">
@@ -111,3 +130,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
