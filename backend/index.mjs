@@ -3,7 +3,7 @@ import cors from 'cors';
 import { GoogleGenAI } from '@google/genai';
 
 const app = express();
-const port = 3001;
+const port = 8080;
 
 app.use(express.json());
 // FIX: Changed cors({}) to cors() to resolve a "No overload matches this call" error which is likely due to a type definition issue.
