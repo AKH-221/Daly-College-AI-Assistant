@@ -1,18 +1,13 @@
 {
   "name": "daly-college-chat-backend",
   "version": "1.0.0",
-  "description": "Backend for Daly College Chat Assistant",
-  "main": "index.mjs",
-  "type": "module",
-  "scripts": {
-  "build": "tsc",
-  "start": "node dist/index.mjs"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@google/genai": "^1.27.0",
-    "cors": "^2.8.5",
-    "express": "^4.19.2"
-  }
+"scripts": {
+  "build": "cd backend && npm install && npm run build"
 }
+
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+
