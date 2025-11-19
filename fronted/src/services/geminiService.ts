@@ -1,17 +1,18 @@
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+// 🔐 API key from Vite environment (mapped from process.env)
+const apiKey = process.env.GEMINI_API_KEY as string;
 
-
-
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set.");
+if (!apiKey) {
+  console.warn(
+    'GEMINI_API_KEY is missing. Make sure it is set in .env.local or Vercel env vars.'
+  );
 }
 
-const ai = new GoogleGenerativeAI({ apiKey: API_KEY });
-
-const systemInstruction = `
+/**
+ * ✅ YOUR FULL SYSTEM PROMPT (Inserted EXACTLY as you provided)
+ */
+export const SYSTEM_PROMPT = `
 Role & Purpose:
 You are the official chat assistant for Daly College, Indore – a historic, prestigious CBSE-affiliated day-and-boarding school located at 1 Residency Area, Indore 452001, Madhya Pradesh. 
 Official websites: dalycollege.org, aura.education
@@ -60,15 +61,26 @@ Final Note:
 Your primary aim is to help users quickly and accurately with queries about Daly College, Indore while reflecting the school’s values of excellence, integrity and community. Always encourage users to verify critical information (like fees, deadlines) with the official school office or website, as details may change.
 `;
 
-export const createChatSession = (): Chat => {
-  const model = 'gemini-2.5-flash';
-  const chat: Chat = ai.chats.create({
-    model: model,
-    config: {
-      systemInstruction: systemInstruction,
-      tools: [{googleSearch: {}}],
-    },
-    history: [],
-  });
-  return chat;
-};
+// ✅ Initialize Gemini
+const genAI = new GoogleGenerativeAI(apiKey);
+const model = genAI.getGenerativeModel({
+  model: 'gemini-1.5-flash'
+});
+
+/**
+ * ✅ Required function — App.tsx imports this
+ */
+export async function sendMessageToServer(message: string): Promise<string> {
+  try {
+    // Combine system prompt + user query
+    const prompt = `${SYSTEM_PROMPT}\n\nUser: ${message}`;
+
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
+
+    return text;
+  } catch (error) {
+    console.error('Gemini API error:', error);
+    return 'Sorry, something went wrong while contacting the AI server.';
+  }
+}
