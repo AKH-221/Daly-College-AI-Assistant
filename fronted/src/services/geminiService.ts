@@ -2,6 +2,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
+
 const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
