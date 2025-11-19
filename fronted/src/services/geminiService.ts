@@ -1,5 +1,6 @@
 
-import { GoogleGenAI, Chat } from '@google/genai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 
 const API_KEY = process.env.API_KEY;
 
@@ -7,7 +8,7 @@ if (!API_KEY) {
   throw new Error("API_KEY environment variable not set.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = new GoogleGenerativeAI({ apiKey: API_KEY });
 
 const systemInstruction = `
 Role & Purpose:
