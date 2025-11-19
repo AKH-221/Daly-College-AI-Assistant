@@ -6,23 +6,30 @@ dotenv.config();
 
 const app = express();
 
-// CORS — allow ALL Vercel domains + localhost
+/**
+ * CORS – allow:
+ *  - Any Vercel deployment (*.vercel.app)
+ *  - Localhost (for local testing)
+ */
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // mobile apps, curl, etc.
+      // No origin (like curl, Postman, mobile apps) → allow
+      if (!origin) {
+        return callback(null, true);
+      }
 
-      // Allow any Vercel deployment
+      // ✅ Allow all Vercel frontend URLs
       if (origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
 
-      // Allow localhost for development
+      // ✅ Allow localhost for development
       if (origin.includes('localhost')) {
         return callback(null, true);
       }
 
-      // Block everything else
+      // ❌ Block everything else
       return callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -30,26 +37,39 @@ app.use(
   })
 );
 
-// Parse JSON
+// Parse JSON request bodies
 app.use(express.json());
 
-// Root test route
+/**
+ * Simple health-check route
+ * Open in browser: GET /
+ */
 app.get('/', (_req, res) => {
-  res.send('Backend is running and accepts all Vercel URLs ✅');
+  res.send('Daly College backend is running and accepts all Vercel URLs ✅');
 });
 
-// Main API route for frontend
+/**
+ * Main API route that your frontend should call
+ * POST /api/chat
+ * Body: { "message": "..." }
+ */
 app.post('/api/chat', (req, res) => {
   const { message } = req.body as { message?: string };
 
   if (!message) {
-    return res.status(400).json({ error: 'Message is required' });
+    return res.status(400).json({ error: 'Message is required in request body' });
   }
 
-  const reply = `Backend received: "${message}"`;
-  res.json({ reply });
+  // 👉 Here you can later call Gemini or other logic.
+  // For now just echo back a response so you can test the connection.
+  const reply = `Backend received: "${message}". Frontend ↔ backend connection works ✅`;
+
+  return res.json({ reply });
 });
 
-// Start server
+// Use PORT from env (for hosting) or 3000 locally
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Backend running on port ${PORT} 🚀`));
+
+app.listen(PORT, () => {
+  console.log(`Backend server is running on port ${PORT}`);
+});

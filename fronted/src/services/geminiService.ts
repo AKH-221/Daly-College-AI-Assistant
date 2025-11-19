@@ -1,18 +1,18 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// 🔐 API key from Vite environment (mapped from process.env)
+// 🔐 API key – Vite will inline this from your vite.config define()
 const apiKey = process.env.GEMINI_API_KEY as string;
 
 if (!apiKey) {
   console.warn(
-    'GEMINI_API_KEY is missing. Make sure it is set in .env.local or Vercel env vars.'
+    'GEMINI_API_KEY is not defined. Make sure it is set in your env / Vercel project settings.'
   );
 }
 
 /**
- * ✅ YOUR FULL SYSTEM PROMPT (Inserted EXACTLY as you provided)
+ * ✅ SYSTEM PROMPT – EXACTLY as you provided
  */
-export const SYSTEM_PROMPT = `
+const systemInstruction = `
 Role & Purpose:
 You are the official chat assistant for Daly College, Indore – a historic, prestigious CBSE-affiliated day-and-boarding school located at 1 Residency Area, Indore 452001, Madhya Pradesh. 
 Official websites: dalycollege.org, aura.education
@@ -61,26 +61,30 @@ Final Note:
 Your primary aim is to help users quickly and accurately with queries about Daly College, Indore while reflecting the school’s values of excellence, integrity and community. Always encourage users to verify critical information (like fees, deadlines) with the official school office or website, as details may change.
 `;
 
-// ✅ Initialize Gemini
+// You can export this if you ever want to show it somewhere else
+export { systemInstruction };
+
+// ✅ Initialize Gemini client
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
   model: 'gemini-1.5-flash'
 });
 
 /**
- * ✅ Required function — App.tsx imports this
+ * This is what App.tsx imports:
+ *   import { sendMessageToServer } from './services/geminiService';
  */
 export async function sendMessageToServer(message: string): Promise<string> {
   try {
-    // Combine system prompt + user query
-    const prompt = `${SYSTEM_PROMPT}\n\nUser: ${message}`;
+    // Combine system prompt + user message so the model always sees your rules
+    const prompt = `${systemInstruction}\n\nUser: ${message}`;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
     return text;
   } catch (error) {
-    console.error('Gemini API error:', error);
-    return 'Sorry, something went wrong while contacting the AI server.';
+    console.error('Error calling Gemini API:', error);
+    return 'Sorry, something went wrong while contacting the Daly College Assistant service.';
   }
 }
