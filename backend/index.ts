@@ -7,49 +7,57 @@ dotenv.config();
 const app = express();
 
 /**
- * CORS – allow:
- *  - Any Vercel deployment (*.vercel.app)
- *  - Localhost (for local testing)
+ * 🌐 CORS configuration
+ * - Allow ALL Vercel URLs: anything that ends with `.vercel.app`
+ *   e.g.
+ *   https://daly-college-ai-assistant.vercel.app
+ *   https://daly-college-ai-assistant-git-main-username.vercel.app
+ *   https://some-preview-randomhash.vercel.app
+ *
+ * - Allow localhost (for local dev)
  */
 app.use(
   cors({
     origin: (origin, callback) => {
-      // No origin (like curl, Postman, mobile apps) → allow
+      // Allow non-browser tools (curl, Postman, etc.) with no Origin header
       if (!origin) {
         return callback(null, true);
       }
 
-      // ✅ Allow all Vercel frontend URLs
+      // Log origin for debugging
+      console.log('[CORS] Incoming origin:', origin);
+
+      // ⭐ Allow all Vercel domains
       if (origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
 
-      // ✅ Allow localhost for development
+      // ⭐ Allow localhost dev
       if (origin.includes('localhost')) {
         return callback(null, true);
       }
 
       // ❌ Block everything else
-      return callback(new Error('Not allowed by CORS'));
+      return callback(new Error('Not allowed by CORS: ' + origin));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: false
   })
 );
 
-// Parse JSON request bodies
+// Parse JSON bodies
 app.use(express.json());
 
 /**
- * Simple health-check route
- * Open in browser: GET /
+ * Simple health route
+ * You can open this in browser to check if backend is alive.
  */
 app.get('/', (_req, res) => {
-  res.send('Daly College backend is running and accepts all Vercel URLs ✅');
+  res.send('Daly College backend is running and accepts all *.vercel.app origins ✅');
 });
 
 /**
- * Main API route that your frontend should call
+ * Main API route your frontend calls
  * POST /api/chat
  * Body: { "message": "..." }
  */
@@ -60,16 +68,16 @@ app.post('/api/chat', (req, res) => {
     return res.status(400).json({ error: 'Message is required in request body' });
   }
 
-  // 👉 Here you can later call Gemini or other logic.
-  // For now just echo back a response so you can test the connection.
+  // 👉 Here you can plug in Gemini or any other logic.
+  // For now, just echo back so you can confirm connection.
   const reply = `Backend received: "${message}". Frontend ↔ backend connection works ✅`;
 
   return res.json({ reply });
 });
 
-// Use PORT from env (for hosting) or 3000 locally
+// Use PORT from env (hosting) or 3000 locally
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Backend server is running on port ${PORT}`);
+  console.log(`🚀 Daly College backend running on port ${PORT}`);
 });
