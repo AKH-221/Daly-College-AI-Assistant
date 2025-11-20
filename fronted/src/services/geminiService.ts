@@ -1,16 +1,17 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Message } from '../types';
 
-// 🔐 API key – Vite will inline this from your vite.config define()
+// 🔐 API key – provided by Vite via define() in vite.config.ts
 const apiKey = process.env.GEMINI_API_KEY as string;
 
 if (!apiKey) {
   console.warn(
-    'GEMINI_API_KEY is not defined. Make sure it is set in your env / Vercel project settings.'
+    'GEMINI_API_KEY is not defined. Please set it in your .env / Vercel env variables.'
   );
 }
 
 /**
- * ✅ SYSTEM PROMPT – EXACTLY as you provided
+ * Daly College system instruction (exactly as you gave it)
  */
 const systemInstruction = `
 Role & Purpose:
@@ -61,30 +62,37 @@ Final Note:
 Your primary aim is to help users quickly and accurately with queries about Daly College, Indore while reflecting the school’s values of excellence, integrity and community. Always encourage users to verify critical information (like fees, deadlines) with the official school office or website, as details may change.
 `;
 
-// You can export this if you ever want to show it somewhere else
-export { systemInstruction };
-
-// ✅ Initialize Gemini client
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
   model: 'gemini-1.5-flash'
 });
 
 /**
- * This is what App.tsx imports:
- *   import { sendMessageToServer } from './services/geminiService';
+ * Called from App.tsx
+ *  - history: previous messages (excluding the initial welcome, if you slice it)
+ *  - userMessage: latest user input
+ * Returns the model's reply text.
  */
-export async function sendMessageToServer(message: string): Promise<string> {
+export async function sendMessageToServer(
+  history: Message[],
+  userMessage: string
+): Promise<string> {
   try {
-    // Combine system prompt + user message so the model always sees your rules
-    const prompt = `${systemInstruction}\n\nUser: ${message}`;
+    // Convert your Message[] into Gemini chat history format
+    const geminiHistory = history.map((msg) => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: msg.parts.map((p) => ({ text: p.text ?? '' }))
+    }));
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const chat = model.startChat({
+      history: geminiHistory,
+      systemInstruction
+    });
 
-    return text;
+    const result = await chat.sendMessage(userMessage);
+    return result.response.text();
   } catch (error) {
     console.error('Error calling Gemini API:', error);
-    return 'Sorry, something went wrong while contacting the Daly College Assistant service.';
+    throw error;
   }
 }
