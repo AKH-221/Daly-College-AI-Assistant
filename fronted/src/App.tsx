@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useState } from "react";
-import { sendMessageToBackend, ChatMessage } from "./geminiservice";
+import { sendMessageToBackend, ChatMessage } from "./services/geminiservice";
 
 function App() {
   const [input, setInput] = useState("");

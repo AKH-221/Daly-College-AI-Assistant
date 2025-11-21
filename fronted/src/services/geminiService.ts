@@ -1,4 +1,4 @@
-// src/geminiservice.ts
+// fronted/src/geminiservice.ts
 
 export type ChatMessage = {
   role: "user" | "assistant";
