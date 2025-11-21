@@ -1,17 +1,17 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Message } from '../types';
 
-// 🔐 API key – provided by Vite via define() in vite.config.ts
+// 🔐 API key – injected by Vite via vite.config.ts
 const apiKey = process.env.GEMINI_API_KEY as string;
 
 if (!apiKey) {
   console.warn(
-    'GEMINI_API_KEY is not defined. Please set it in your .env / Vercel env variables.'
+    'GEMINI_API_KEY is not defined. Set it in your .env / Vercel env variables.'
   );
 }
 
 /**
- * Daly College system instruction (exactly as you gave it)
+ * Daly College system instruction (exactly as provided)
  */
 const systemInstruction = `
 Role & Purpose:
@@ -68,24 +68,37 @@ const model = genAI.getGenerativeModel({
 });
 
 /**
- * Called from App.tsx
- *  - history: previous messages (excluding the initial welcome, if you slice it)
- *  - userMessage: latest user input
- * Returns the model's reply text.
+ * Convert your internal Message type into Gemini chat history format.
+ */
+function convertHistory(messages: Message[]) {
+  return messages.map((msg) => ({
+    role: msg.role === 'user' ? 'user' : 'model',
+    parts: msg.parts.map((p) => ({ text: p.text ?? '' }))
+  }));
+}
+
+/**
+ * Called from App.tsx:
+ *   await sendMessageToServer(history, userMessage)
+ *
+ * - history: previous messages in the conversation (Message[])
+ * - userMessage: latest user input
+ * Returns: model reply text.
  */
 export async function sendMessageToServer(
   history: Message[],
   userMessage: string
 ): Promise<string> {
+  if (!apiKey) {
+    // Fail fast so you see it clearly in console
+    throw new Error('GEMINI_API_KEY is not set – configure it in env variables.');
+  }
+
   try {
-    // Convert your Message[] into Gemini chat history format
-    const geminiHistory = history.map((msg) => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: msg.parts.map((p) => ({ text: p.text ?? '' }))
-    }));
+    const chatHistory = convertHistory(history);
 
     const chat = model.startChat({
-      history: geminiHistory,
+      history: chatHistory,
       systemInstruction
     });
 
@@ -93,6 +106,7 @@ export async function sendMessageToServer(
     return result.response.text();
   } catch (error) {
     console.error('Error calling Gemini API:', error);
+    // Let App.tsx catch & show “An error occurred. Please try again.”
     throw error;
   }
 }
