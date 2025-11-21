@@ -1,129 +1,120 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
 const app = express();
 
-// CORS
-app.use(cors());
-app.use(express.json());
+// ================== CONFIG ==================
+const FRONTEND_ORIGIN = "http://localhost:5173"; // Vite frontend
+const PORT = process.env.PORT || 8080;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// =========================
-// 🔥 SYSTEM PROMPT (YOUR ORIGINAL SYSTEM PROMPT HERE)
-// =========================
-const SYSTEM_PROMPT = `
-You are the Daly College AI Assistant.
-You must always answer politely, give accurate information, help students,
-and follow school policies. 
-You must not give harmful, illegal, or unethical instructions.
-Always respond in a helpful, friendly, and respectful tone.
-`;
-
-// ===============================
-// HEALTH CHECK
-// ===============================
-app.get("/", (_req: Request, res: Response) => {
-  res.send("Backend Working ✅");
-});
-
-// ===============================
-// MAIN CHAT REQUEST HANDLER
-// ===============================
-async function handleChat(req: Request, res: Response) {
-  try {
-    const { message, history } = req.body || {};
-
-    if (!message) {
-      return res.status(400).json({ error: "Missing 'message' in request body" });
-    }
-
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({
-        error: "GEMINI_API_KEY not found in backend environment",
-      });
-    }
-
-    // ========== Build Gemini Messages ==========
-    const contents: any[] = [];
-
-    // Chat history
-    if (Array.isArray(history)) {
-      for (const msg of history) {
-        if (!msg.role || !msg.content) continue;
-        contents.push({
-          role: msg.role === "user" || msg.role === "model" ? msg.role : "user",
-          parts: [{ text: msg.content }],
-        });
-      }
-    }
-
-    // Current user input
-    contents.push({
-      role: "user",
-      parts: [{ text: message }],
-    });
-
-    // Request body
-    const requestBody = {
-      contents,
-      system_instruction: {
-        role: "system",
-        parts: [{ text: SYSTEM_PROMPT }],
-      },
-    };
-
-    // ========== GEMINI API CALL ==========
-    const url =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
-      apiKey;
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Gemini API ERROR:", errorText);
-      return res.status(500).json({
-        error: "Gemini API request failed",
-        details: errorText,
-      });
-    }
-
-    const data: any = await response.json();
-
-    const reply =
-      data?.candidates?.[0]?.content?.parts
-        ?.map((p: any) => p?.text || "")
-        .join("") || "No response from Gemini.";
-
-    return res.json({ reply });
-  } catch (err: any) {
-    console.error("Server Error:", err);
-    return res.status(500).json({
-      error: "Internal Server Error",
-      details: err.message || String(err),
-    });
-  }
+if (!GEMINI_API_KEY) {
+  console.warn("⚠️ GEMINI_API_KEY is not set in .env file");
 }
 
-// ===============================
-// ENDPOINTS
-// ===============================
-app.post("/api/chat", handleChat);
-app.post("/api/message", handleChat);
-app.post("/api/gemini", handleChat);
+// ======= (OPTIONAL) SYSTEM PROMPT ===========
+// 👉 IMPORTANT: paste your EXISTING system prompt text here,
+// so behaviour stays exactly the same as before.
+const SYSTEM_PROMPT = `
+You are Daly College AI Assistant. Answer clearly and helpfully...
+(Replace this text with your original system prompt)
+`;
 
-// ===============================
-// START SERVER
-// ===============================
-const PORT = process.env.PORT || 3000;
+// ================ MIDDLEWARE ================
+app.use(
+  cors({
+    origin: FRONTEND_ORIGIN,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
+app.use(express.json());
+
+// ================ GEMINI SETUP ==============
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-pro",
+});
+
+// ================ ROUTES ====================
+
+// Simple health-check so you can test backend directly
+app.get("/", (_req: Request, res: Response) => {
+  return res.json({
+    status: "ok",
+    message: "Backend is running ✅",
+  });
+});
+
+// Main chat endpoint your frontend should call
+// e.g. POST http://localhost:8080/api/chat
+// body: { message: string, history?: {role: string, content: string}[] }
+app.post(
+  "/api/chat",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { message, history } = req.body as {
+        message?: string;
+        history?: { role: string; content: string }[];
+      };
+
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({ error: "Missing 'message' in body" });
+      }
+
+      // Build conversation context using system prompt + history + user message
+      const conversationParts = [
+        { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
+        ...(history || []).map((h) => ({
+          role: h.role === "user" ? "user" : "model",
+          parts: [{ text: h.content }],
+        })),
+        { role: "user", parts: [{ text: message }] },
+      ];
+
+      const result = await model.generateContent({
+        contents: conversationParts,
+      });
+
+      const responseText =
+        result.response
+          ?.candidates?.[0]
+          ?.content?.parts?.map((p) => (p as any).text || "")
+          .join("") || "";
+
+      if (!responseText) {
+        return res.status(500).json({
+          error: "Empty response from Gemini",
+        });
+      }
+
+      return res.json({
+        reply: responseText,
+      });
+    } catch (err) {
+      console.error("💥 Error in /api/chat:", err);
+      return next(err);
+    }
+  }
+);
+
+// =========== GLOBAL ERROR HANDLER ===========
+app.use(
+  (err: any, _req: Request, res: Response, _next: NextFunction) => {
+    console.error("💥 Server Error:", err);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      details: err?.message || String(err),
+    });
+  }
+);
+
+// ================ START SERVER =================
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Backend server running on http://localhost:${PORT}`);
 });
