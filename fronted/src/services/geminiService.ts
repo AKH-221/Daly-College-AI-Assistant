@@ -9,11 +9,15 @@ export type ChatMessage = {
 
 const CHUNK_SEPARATOR = "__END_OF_CHUNK__";
 
-// Base backend URL: env or localhost fallback
-const BASE_BACKEND_URL =
-  import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") ||
-  "http://localhost:8080";
+// ✅ Backend base URL:
+// - On LOCAL: from fronted/.env or .env.local (VITE_BACKEND_URL), else http://localhost:8080
+// - On VERCEL: from Project Settings → Environment Variables → VITE_BACKEND_URL
+const rawBackendUrl = (import.meta.env.VITE_BACKEND_URL as string | undefined) || "http://localhost:8080";
 
+// remove any trailing slash
+const BASE_BACKEND_URL = rawBackendUrl.replace(/\/+$/, "");
+
+// Final endpoint your frontend will call
 const CHAT_ENDPOINT = `${BASE_BACKEND_URL}/api/chat`;
 
 /**
@@ -43,7 +47,7 @@ async function callBackend(
 }
 
 /**
- * Old/simple API – returns full reply as string.
+ * Simple API – returns full reply as string.
  */
 export async function sendMessageToBackend(
   message: string,
@@ -53,9 +57,9 @@ export async function sendMessageToBackend(
 }
 
 /**
- * New API used by App.tsx:
+ * API used by App.tsx:
  * Takes history (Message[]), calls backend, wraps the reply
- * into a fake streaming ReadableStream with JSON chunks.
+ * into a fake streaming ReadableStream with JSON chunks separated by CHUNK_SEPARATOR.
  */
 export async function sendMessageToServer(
   history: Message[],
@@ -72,10 +76,10 @@ export async function sendMessageToServer(
 
   return new ReadableStream<Uint8Array>({
     start(controller) {
-      const chunkPayload =
-        JSON.stringify({ text: reply }) + CHUNK_SEPARATOR;
-      controller.enqueue(encoder.encode(chunkPayload));
-      controller.close();
+    const chunkPayload =
+      JSON.stringify({ text: reply }) + CHUNK_SEPARATOR;
+    controller.enqueue(encoder.encode(chunkPayload));
+    controller.close();
     },
   });
 }
