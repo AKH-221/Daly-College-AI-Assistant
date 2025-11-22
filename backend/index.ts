@@ -1,28 +1,48 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Load environment variables locally (.env)
+dotenv.config();
+
+// Check API key
+if (!process.env.GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY is not set in environment variables");
+}
 
 const app = express();
 
-// Allow requests from any origin (simple for now)
-// If you want to restrict later, you can replace "*" with your Vercel URL.
+// ✅ Vercel frontend URLs (from your screenshot)
+const allowedOrigins = [
+  "https://daly-college-ai-assistant.vercel.app",
+  "https://daly-college-ai-assistant-git-main-anish-kedias-projects.vercel.app",
+  "https://daly-college-ai-assistant-9wkurpcj3-anish-kedias-projects.vercel.app",
+  // local dev frontends (optional but useful)
+  "http://localhost:5173",
+  "http://localhost:5174",
+];
+
+// CORS: allow your Vercel frontend + local dev
 app.use(
   cors({
-    origin: "*",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow tools / curl etc.
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      console.warn("❌ CORS blocked origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
 app.use(express.json());
 
-// Make sure your GEMINI_API_KEY is set in Render / .env
-if (!process.env.GEMINI_API_KEY) {
-  console.error("❌ GEMINI_API_KEY is not set in environment variables");
-}
-
+// Gemini client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 // ⭐ Choose Gemini model here
-// e.g. "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", etc.
 const MODEL_NAME = "gemini-2.5-flash";
 
 const model = genAI.getGenerativeModel({
@@ -34,7 +54,7 @@ Provide step-by-step explanations when needed.
 `,
 });
 
-// Simple health-check route
+// Health check
 app.get("/", (req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
@@ -50,7 +70,7 @@ app.post("/api/chat", async (req: Request, res: Response) => {
         .json({ error: "Missing or invalid 'message' field" });
     }
 
-    // For now, ignore history and just send the current message
+    // For now we ignore history and only send current message
     const contents = [
       {
         role: "user" as const,
