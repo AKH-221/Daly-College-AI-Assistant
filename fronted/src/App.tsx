@@ -42,40 +42,32 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Daly College AI Assistant</h1>
-
-      <div
+    <div
+      style={{
+        fontFamily: "Arial, sans-serif",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "#f3f4f6",
+      }}
+    >
+      {/* HEADER */}
+      <header
         style={{
-          border: "1px solid #ccc",
+          background: "#1f2937",
+          color: "white",
           padding: "1rem",
-          height: "300px",
-          overflowY: "auto",
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          textAlign: "center",
         }}
       >
-        {messages.map((m, idx) => (
-          <div key={idx} style={{ marginBottom: "0.5rem" }}>
-            <strong>{m.role === "user" ? "You" : "Assistant"}: </strong>
-            {m.content}
-          </div>
-        ))}
-      </div>
+        Daly College AI Assistant
+      </header>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <div style={{ marginTop: "1rem" }}>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="Type your question..."
-        />
-        <button onClick={handleSend} disabled={loading}>
-          {loading ? "Thinking..." : "Send"}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-export default App;
+      {/* CHAT AREA */}
+      <div
+        style={{
+          flexGrow: 1,
+          padding: "1rem",
+          overflowY: "auto",
