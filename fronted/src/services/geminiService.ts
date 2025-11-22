@@ -9,15 +9,15 @@ export type ChatMessage = {
 
 const CHUNK_SEPARATOR = "__END_OF_CHUNK__";
 
-// Base backend URL: use env if available, otherwise default to local
+// Base backend URL: env or localhost fallback
 const BASE_BACKEND_URL =
-  import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "http://localhost:8080";
+  import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") ||
+  "http://localhost:8080";
 
 const CHAT_ENDPOINT = `${BASE_BACKEND_URL}/api/chat`;
 
 /**
  * Low-level helper to call the backend and get a full reply string.
- * Backend is expected to return JSON: { reply: "..." }
  */
 async function callBackend(
   message: string,
@@ -39,13 +39,11 @@ async function callBackend(
   }
 
   const data = await response.json();
-  // backend sends { reply: "..." }
   return data.reply ?? "";
 }
 
 /**
- * Old/simple API – kept in case anything else is still using it.
- * Returns the full reply as a string.
+ * Old/simple API – returns full reply as string.
  */
 export async function sendMessageToBackend(
   message: string,
@@ -55,14 +53,9 @@ export async function sendMessageToBackend(
 }
 
 /**
- * New API used by App.tsx.
- *
- * - Takes `history` in your frontend `Message` format
- * - Converts it to ChatMessage[] for the backend
- * - Calls the backend
- * - Wraps the full reply into a ReadableStream that emits a single JSON chunk:
- *   { "text": "<reply>" } + "__END_OF_CHUNK__"
- * so App.tsx can consume it exactly as it expects.
+ * New API used by App.tsx:
+ * Takes history (Message[]), calls backend, wraps the reply
+ * into a fake streaming ReadableStream with JSON chunks.
  */
 export async function sendMessageToServer(
   history: Message[],
@@ -74,15 +67,13 @@ export async function sendMessageToServer(
     content: m.parts?.map((p) => p.text).join(" ") ?? "",
   }));
 
-  // Call backend and get the full reply as a string
   const reply = await callBackend(messageText, chatHistory);
-
-  // Wrap in a fake streaming response so App.tsx logic works
   const encoder = new TextEncoder();
 
   return new ReadableStream<Uint8Array>({
     start(controller) {
-      const chunkPayload = JSON.stringify({ text: reply }) + CHUNK_SEPARATOR;
+      const chunkPayload =
+        JSON.stringify({ text: reply }) + CHUNK_SEPARATOR;
       controller.enqueue(encoder.encode(chunkPayload));
       controller.close();
     },

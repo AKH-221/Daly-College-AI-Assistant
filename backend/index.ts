@@ -20,7 +20,7 @@ app.use(express.json());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 // ⭐ CHOOSE YOUR MODEL HERE ⭐
-// Examples:
+// Examples (check AI Studio for exact IDs):
 //   "gemini-2.5-flash"
 //   "gemini-2.0-flash"
 //   "gemini-2.0-flash-lite"
@@ -37,13 +37,13 @@ Provide step-by-step explanations when needed.
 `,
 });
 
-// Type for frontend message (best-effort)
+// Type for frontend messages
 type FrontendMessage = {
   role?: "user" | "model";
   parts?: { text?: string }[];
 };
 
-// Simple GET route (health check)
+// Health check route
 app.get("/", (req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
@@ -67,7 +67,7 @@ app.post("/api/chat", async (req: Request, res: Response) => {
       ? history
       : [];
 
-    // Convert history → Gemini API format, SAFELY
+    // Convert history → Gemini API contents (defensively)
     const contents = safeHistory.map((msg) => ({
       role: msg.role === "user" ? "user" : "model",
       parts: (msg.parts ?? []).map((p) => ({
@@ -75,15 +75,14 @@ app.post("/api/chat", async (req: Request, res: Response) => {
       })),
     }));
 
-    // Add the user message
+    // Add current user message
     contents.push({
       role: "user" as const,
       parts: [{ text: message }],
     });
 
-    // Call Gemini API
+    // Call Gemini
     const response = await model.generateContent({ contents });
-
     const reply = response.response?.text() || "";
 
     return res.json({ reply });
