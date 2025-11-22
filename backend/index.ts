@@ -18,7 +18,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 // gemini-1.5-pro
 // gemini-1.5-flash
 //
-const MODEL_NAME = "gemini-2.0-pro-exp";
+const MODEL_NAME = "gemini2.0-flash";
 
 const model = genAI.getGenerativeModel({
   model: MODEL_NAME,
