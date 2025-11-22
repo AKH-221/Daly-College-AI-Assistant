@@ -20,7 +20,7 @@ app.use(express.json());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 // ⭐ CHOOSE YOUR MODEL HERE ⭐
-// Examples (check AI Studio for exact IDs):
+// Examples:
 //   "gemini-2.5-flash"
 //   "gemini-2.0-flash"
 //   "gemini-2.0-flash-lite"
@@ -37,23 +37,17 @@ Provide step-by-step explanations when needed.
 `,
 });
 
-// Type for frontend messages
-type FrontendMessage = {
-  role?: "user" | "model";
-  parts?: { text?: string }[];
-};
-
 // Health check route
 app.get("/", (req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
 
-// Chat endpoint
+// Chat endpoint – NO history mapping, only current message
 app.post("/api/chat", async (req: Request, res: Response) => {
   try {
-    const { message, history } = req.body as {
+    const { message } = req.body as {
       message?: string;
-      history?: FrontendMessage[] | null;
+      history?: any; // ignored for now
     };
 
     if (!message || typeof message !== "string") {
@@ -62,27 +56,17 @@ app.post("/api/chat", async (req: Request, res: Response) => {
         .json({ error: "Missing or invalid 'message' field" });
     }
 
-    // Ensure history is always an array
-    const safeHistory: FrontendMessage[] = Array.isArray(history)
-      ? history
-      : [];
+    // Only send the current user message to Gemini
+    const contents = [
+      {
+        role: "user" as const,
+        parts: [{ text: message }],
+      },
+    ];
 
-    // Convert history → Gemini API contents (defensively)
-    const contents = safeHistory.map((msg) => ({
-      role: msg.role === "user" ? "user" : "model",
-      parts: (msg.parts ?? []).map((p) => ({
-        text: p?.text ?? "",
-      })),
-    }));
-
-    // Add current user message
-    contents.push({
-      role: "user" as const,
-      parts: [{ text: message }],
-    });
-
-    // Call Gemini
+    // Call Gemini API
     const response = await model.generateContent({ contents });
+
     const reply = response.response?.text() || "";
 
     return res.json({ reply });
