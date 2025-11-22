@@ -122,7 +122,7 @@ function App() {
             flexGrow: 1,
             padding: "0.7rem",
             borderRadius: "8px",
-            border: "1px solid "#aaa",
+            border: "1px solid #aaa", // ✅ fixed here
             outline: "none",
             fontSize: "1rem",
           }}
