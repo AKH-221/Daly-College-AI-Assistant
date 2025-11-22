@@ -15,10 +15,10 @@ const CHUNK_SEPARATOR = "__END_OF_CHUNK__";
 const rawBackendUrl = (import.meta.env.VITE_BACKEND_URL as string | undefined) || "http://localhost:8080";
 
 // remove any trailing slash
-const BASE_BACKEND_URL = rawBackendUrl.replace(/\/+$/, "");
+const VITE_BACKEND_URL = rawBackendUrl.replace(/\/+$/, "");
 
 // Final endpoint your frontend will call
-const CHAT_ENDPOINT = `${BASE_BACKEND_URL}/api/chat`;
+const CHAT_ENDPOINT = `${VITE_BACKEND_URL}/api/chat`;
 
 /**
  * Low-level helper to call the backend and get a full reply string.
