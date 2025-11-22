@@ -1,6 +1,5 @@
-// src/App.tsx
 import { useState } from "react";
-import { sendMessageToBackend, ChatMessage } from "./services/geminiservice";
+import { sendMessageToBackend, ChatMessage } from "./services/geminiService";
 
 function App() {
   const [input, setInput] = useState("");
@@ -46,7 +45,14 @@ function App() {
     <div>
       <h1>Daly College AI Assistant</h1>
 
-      <div style={{ border: "1px solid #ccc", padding: "1rem", height: "300px", overflowY: "auto" }}>
+      <div
+        style={{
+          border: "1px solid #ccc",
+          padding: "1rem",
+          height: "300px",
+          overflowY: "auto",
+        }}
+      >
         {messages.map((m, idx) => (
           <div key={idx} style={{ marginBottom: "0.5rem" }}>
             <strong>{m.role === "user" ? "You" : "Assistant"}: </strong>
