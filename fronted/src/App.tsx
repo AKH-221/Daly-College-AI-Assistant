@@ -1,154 +1,133 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Message } from "./types";
-import Header from "./components/Header";
-import ChatWindow from "./components/ChatWindow";
-import InputBar from "./components/InputBar";
+import React, { useState, useCallback } from 'react';
+import { Message, GroundingChunk } from './types';
+import { sendMessageToServer } from './services/geminiService';
+import Header from './components/Header';
+import ChatWindow from './components/ChatWindow';
+import InputBar from './components/InputBar';
 
-export type InitializationStatus = "pending" | "success" | "error";
+const CHUNK_SEPARATOR = '__END_OF_CHUNK__';
 
 const App: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [initializationStatus, setInitializationStatus] =
-    useState<InitializationStatus>("pending");
-  const [showWelcome, setShowWelcome] = useState(true);
-  const [chatId, setChatId] = useState<string | null>(null);
-
-  // ✅ Initialize new chat session with backend (Daly College Assistant)
-  useEffect(() => {
-    const initializeChat = async () => {
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/start`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        if (!res.ok) throw new Error(`Failed to connect: ${res.status}`);
-        const data = await res.json();
-
-        if (!data.chatId) throw new Error("No chatId returned from backend");
-
-        setChatId(data.chatId);
-        setMessages([
-          {
-            id: "initial-message",
-            role: "model",
-            text:
-              "👋 Hello! I am the Daly College Assistant. How can I help you today with Daly College, Indore?",
-          },
-        ]);
-        setInitializationStatus("success");
-        console.log("✅ Daly College Assistant initialized successfully");
-      } catch (error) {
-        console.error("❌ Failed to initialize Daly College chat:", error);
-        setMessages([
-          {
-            id: "error-init",
-            role: "model",
-            text:
-              "⚠️ Sorry, I'm having trouble connecting to the Daly College server.\n\nPlease check your network or try again in a few moments.",
-          },
-        ]);
-        setInitializationStatus("error");
-      }
-    };
-
-    initializeChat();
-  }, []);
-
-  // ✅ Handle message send
-  const handleSendMessage = useCallback(
-    async (text: string) => {
-      if (
-        !text.trim() ||
-        isLoading ||
-        initializationStatus !== "success" ||
-        !chatId
-      )
-        return;
-
-      if (showWelcome) setShowWelcome(false);
-      setIsLoading(true);
-
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        role: "user",
-        text,
-      };
-      setMessages((prev) => [...prev, userMessage]);
-
-      const modelMessageId = (Date.now() + 1).toString();
-      const modelMessage: Message = {
-        id: modelMessageId,
-        role: "model",
-        text: "",
-      };
-      setMessages((prev) => [...prev, modelMessage]);
-
-      try {
-        // ✅ Send message to Daly College backend
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/chat`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chatId,
-              message: text,
-            }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (!data.text) {
-          throw new Error(
-            "Empty response from backend or invalid message structure."
-          );
-        }
-
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === modelMessageId ? { ...msg, text: data.text } : msg
-          )
-        );
-      } catch (error) {
-        console.error("❌ Error sending message to Daly College Assistant:", error);
-        const errorText =
-          "⚠️ Oops! Something went wrong while connecting to the Daly College Assistant. Please try again later.";
-        setMessages((prev) =>
-          prev.map((msg) =>
-            msg.id === modelMessageId ? { ...msg, text: errorText } : msg
-          )
-        );
-      } finally {
-        setIsLoading(false);
-      }
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: 'model',
+      parts: [{ text: "Hello! I'm the Daly College Assistant. How can I help you today?" }],
     },
-    [isLoading, initializationStatus, showWelcome, chatId]
-  );
+  ]);
+  const [userInput, setUserInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSendMessage = useCallback(async (messageText: string) => {
+    if (!messageText.trim() || isLoading) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    const userMessage: Message = { role: 'user', parts: [{ text: messageText }] };
+    const currentMessages = [...messages, userMessage];
+    setMessages(currentMessages);
+    setUserInput('');
+
+    try {
+      // The history sent to the backend should not include the initial welcome message
+      const history = messages.slice(1);
+      const stream = await sendMessageToServer(history, messageText);
+      
+      if (!stream) {
+        throw new Error('Failed to get response stream.');
+      }
+
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      
+      let modelResponse = '';
+      const groundingChunks: GroundingChunk[] = [];
+      setMessages(prev => [...prev, { role: 'model', parts: [{ text: '' }] }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split(CHUNK_SEPARATOR);
+        
+        // The last part may be incomplete, so we keep it in the buffer
+        buffer = parts.pop() || '';
+
+        for (const part of parts) {
+          if (part) {
+            try {
+              const parsedChunk = JSON.parse(part);
+              
+              if (parsedChunk.text) {
+                modelResponse += parsedChunk.text;
+                setMessages(prev => {
+                  const newMessages = [...prev];
+                  newMessages[newMessages.length - 1].parts[0].text = modelResponse;
+                  return newMessages;
+                });
+              }
+
+              if (parsedChunk.groundingChunks) {
+                for (const chunkData of parsedChunk.groundingChunks) {
+                  if (chunkData.web?.uri && !groundingChunks.some(c => c.web?.uri === chunkData.web.uri)) {
+                    groundingChunks.push(chunkData);
+                  }
+                }
+              }
+
+            } catch (e) {
+              console.error("Failed to parse chunk:", part, e);
+            }
+          }
+        }
+      }
+      
+      if (groundingChunks.length > 0) {
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage.role === 'model') {
+            lastMessage.groundingChunks = groundingChunks;
+          }
+          return newMessages;
+        });
+      }
+
+    } catch (err) {
+      const errorMessage = 'An error occurred. Please try again.';
+      setError(errorMessage);
+      setMessages(prev => [...prev, { role: 'model', parts: [{ text: errorMessage }] }]);
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading, messages]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 text-gray-800">
+    <div className="bg-slate-100 dark:bg-slate-900 font-sans h-screen w-screen flex flex-col">
       <Header />
-      <ChatWindow
-        messages={messages}
-        isLoading={isLoading}
-        initializationStatus={initializationStatus}
-        showWelcome={showWelcome}
-        onSuggestionClick={handleSendMessage}
-      />
-      <InputBar
-        onSendMessage={handleSendMessage}
-        isLoading={isLoading}
-        isInitialized={initializationStatus === "success"}
-      />
+      <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
+        <ChatWindow messages={messages} />
+        {error && (
+            <div className="flex justify-center">
+                <p className="text-red-500 bg-red-100 dark:bg-red-900/50 p-2 rounded-md text-sm">{error}</p>
+            </div>
+        )}
+      </main>
+      <footer className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 md:p-6 sticky bottom-0">
+        <InputBar
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          onSend={() => handleSendMessage(userInput)}
+          isLoading={isLoading}
+        />
+      </footer>
     </div>
   );
 };
 
 export default App;
-s
+
