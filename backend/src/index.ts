@@ -69,6 +69,8 @@ Assistant: “Daly College is affiliated with the Central Board of Secondary Edu
 
 Final Note:
 Your primary aim is to help users quickly and accurately with queries about Daly College, Indore while reflecting the school’s values of excellence, integrity and community. Always encourage users to verify critical information (like fees, deadlines) with the official school office or website, as details may change.
+`,
+
 });
 
 app.get("/", (_req: Request, res: Response) => {
