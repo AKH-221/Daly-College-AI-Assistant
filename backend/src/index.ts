@@ -44,7 +44,6 @@ General style:
 - When explaining processes (like admissions, exams, competitions, or events), give step-by-step guidance if that will help the user.
 - If you do not know something for sure, or it depends on the latest official information, say that honestly and suggest that the user check directly with Daly College via the official website or the school office.
 `
-
 });
 
 app.get("/", (_req: Request, res: Response) => {
