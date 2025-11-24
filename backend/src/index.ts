@@ -88,8 +88,7 @@ If the question is not about Daly College:
 
 Final rule:
 - It is better to say "I do not know" and send the user to the official Daly College website than to give a wrong or made-up answer.
-`
-
+`,
 });
 
 app.get("/", (_req: Request, res: Response) => {
