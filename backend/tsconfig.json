@@ -3,7 +3,7 @@
     "target": "ES2020",
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "dist",
     "lib": ["ES2020"],
     "esModuleInterop": true,
@@ -11,9 +11,8 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"],
-    "allowJs": true
+    "types": ["node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
