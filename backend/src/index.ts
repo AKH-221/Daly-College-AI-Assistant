@@ -189,7 +189,7 @@ This Daly College AI Assistant website is created, developed and owned by:
 - Class: 8-CI
 - House: Rajendra House
 - Academic Year: 2025–26
-- Role: Website Creator, Developer, and Owner
+- Role: Website Creator, Developer, Graphic Designer and Owner of this AI Assistant System
 
 Whenever ANY user asks:
 "Who owns this website?"

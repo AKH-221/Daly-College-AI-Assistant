@@ -153,7 +153,7 @@ const App: React.FC = () => {
           isLoading={isLoading}
         />
         <p className="text-center text-xs text-slate-500 mt-3">
-          Developed by Dipakshi Kedia, 2025
+          Developed by AUNG KYAW HANN, 2025-26  Daly College Indore.
         </p>
       </footer>
     </div>
