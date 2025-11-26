@@ -12,9 +12,7 @@ const CHUNK_SEPARATOR = "__END_OF_CHUNK__";
 // ✅ Backend base URL:
 // - On LOCAL: from fronted/.env or .env.local (VITE_BACKEND_URL), else http://localhost:8080
 // - On VERCEL: from Project Settings → Environment Variables → VITE_BACKEND_URL
-const API_BASE_URL =
-  import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
-
+const rawBackendUrl = (import.meta.env.VITE_BACKEND_URL as string | undefined) || "http://localhost:8080";
 
 // remove any trailing slash
 const VITE_BACKEND_URL = rawBackendUrl.replace(/\/+$/, "");
