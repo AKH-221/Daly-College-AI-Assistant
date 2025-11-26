@@ -1,12 +1,37 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// CORS configuration – allows local dev + Vercel frontend
+const allowedOrigins = [
+  "http://localhost:5173", // Vite dev
+  "http://localhost:3000", // Next/React dev (if you ever use it)
+  "https://your-vercel-frontend-url.vercel.app", // TODO: replace with your actual Vercel URL
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow REST clients / curl with no origin
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      console.warn("Blocked CORS origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
+// Handle preflight requests
+app.options("*", cors());
+
 app.use(express.json());
 
 // Read API key from environment
@@ -274,8 +299,7 @@ Boarding House Coordinator roles as listed above.
 
 // Gemini model setup
 const MODEL_NAME = "gemini-2.5-flash";
-
-let model: GenerativeModel | null = null;
+let model: ReturnType<GoogleGenerativeAI["getGenerativeModel"]> | null = null;
 
 if (apiKey) {
   const genAI = new GoogleGenerativeAI(apiKey);
@@ -290,64 +314,57 @@ app.get("/", (_req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
 
-interface ChatRequestBody {
-  message?: string;
-}
-
 // Chat endpoint
-app.post(
-  "/api/chat",
-  async (req: Request<{}, {}, ChatRequestBody>, res: Response) => {
-    try {
-      if (!model) {
-        return res.status(500).json({
-          error:
-            "Gemini API key is not configured on the server. Please set GEMINI_API_KEY in backend/.env.",
-        });
-      }
-
-      const { message } = req.body;
-
-      if (!message || typeof message !== "string") {
-        return res
-          .status(400)
-          .json({ error: "Missing or invalid 'message' field" });
-      }
-
-      const contents = [
-        {
-          role: "user",
-          parts: [{ text: message }],
-        },
-      ];
-
-      const result = await model.generateContent({ contents });
-
-      let reply = "";
-
-      if (
-        result &&
-        result.response &&
-        typeof (result.response as any).text === "function"
-      ) {
-        reply = (result.response as any).text();
-      } else {
-        reply = "I am unable to generate a response at the moment.";
-      }
-
-      return res.json({ reply });
-    } catch (error: any) {
-      console.error("💥 Gemini Error:", error);
+app.post("/api/chat", async (req: Request, res: Response) => {
+  try {
+    if (!model) {
       return res.status(500).json({
-        error: "Failed to connect to Gemini",
-        details: error?.message || "Unknown error",
+        error:
+          "Gemini API key is not configured on the server. Please set GEMINI_API_KEY in backend/.env.",
       });
     }
+
+    const { message } = req.body;
+
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return res.status(400).json({
+        error:
+          "Missing or invalid 'message' field. It must be a non-empty string.",
+      });
+    }
+
+    const contents = [
+      {
+        role: "user",
+        parts: [{ text: message }],
+      },
+    ];
+
+    const result = await model.generateContent({ contents });
+
+    let reply = "I am unable to generate a response at the moment.";
+
+    if (result?.response && typeof result.response.text === "function") {
+      reply = result.response.text();
+    }
+
+    return res.json({ reply });
+  } catch (error: any) {
+    console.error("💥 Gemini Error:", error);
+    return res.status(500).json({
+      error: "Failed to connect to Gemini",
+      details: error?.message || "Unknown error",
+    });
   }
-);
+});
 
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
+  if (!apiKey) {
+    console.warn(
+      "⚠️ Server is running but GEMINI_API_KEY is missing. /api/chat will return 500 until you set it."
+    );
+  }
   console.log(`🚀 Backend running on port ${PORT}`);
 });
