@@ -10,7 +10,7 @@ const app = express();
 // CORS configuration – allows local dev + Vercel frontend
 const allowedOrigins = [
   "http://localhost:5173", // Vite dev
-  "http://localhost:3000", // Next/React dev (if you ever use it)
+  "http://localhost:3000", // Next/React dev
   "https://your-vercel-frontend-url.vercel.app", // TODO: replace with your actual Vercel URL
 ];
 
@@ -29,8 +29,7 @@ app.use(
   })
 );
 
-// Handle preflight requests
-app.options("*", cors());
+// ❌ DO NOT add app.options("*", ...) here – that breaks on Express 5
 
 app.use(express.json());
 
