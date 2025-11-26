@@ -30,7 +30,6 @@ const App: React.FC = () => {
     setUserInput('');
 
     try {
-      // The history sent to the backend should not include the initial welcome message
       const history = messages.slice(1);
       const stream = await sendMessageToServer(history, messageText);
       
@@ -41,9 +40,9 @@ const App: React.FC = () => {
       const reader = stream.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
-      
       let modelResponse = '';
       const groundingChunks: GroundingChunk[] = [];
+
       setMessages(prev => [...prev, { role: 'model', parts: [{ text: '' }] }]);
 
       while (true) {
@@ -52,8 +51,6 @@ const App: React.FC = () => {
 
         buffer += decoder.decode(value, { stream: true });
         const parts = buffer.split(CHUNK_SEPARATOR);
-        
-        // The last part may be incomplete, so we keep it in the buffer
         buffer = parts.pop() || '';
 
         for (const part of parts) {
@@ -84,7 +81,7 @@ const App: React.FC = () => {
           }
         }
       }
-      
+
       if (groundingChunks.length > 0) {
         setMessages(prev => {
           const newMessages = [...prev];
@@ -106,24 +103,58 @@ const App: React.FC = () => {
     }
   }, [isLoading, messages]);
 
+  // QUICK BUTTON PROMPTS  
+  const quickPrompts = [
+    { label: "Principal", text: "Who is the principal of Daly College?" },
+    { label: "Fee Structure", text: "Give me the full Daly College fee structure for day scholars and boarders." },
+    { label: "Senior Faculty", text: "List all senior faculty and HODs of Daly College." },
+    { label: "Boarding Houses", text: "Tell me about Daly College boarding houses and their house masters." },
+    { label: "Day Boarding Houses", text: "Explain Daly College day boarding houses and their house masters." },
+    { label: "Campus", text: "What is the campus size and facilities of Daly College?" },
+    { label: "Admissions", text: "What is the admission procedure for Daly College?" },
+    { label: "Board of Governors", text: "Who are the members of the Daly College Board of Governors?" },
+    { label: "About Daly College", text: "Tell me about Daly College." },
+  ];
+
   return (
     <div className="bg-slate-100 dark:bg-slate-900 font-sans h-screen w-screen flex flex-col">
       <Header />
+
+      {/* QUICK BUTTONS */}
+      <div className="px-4 py-3 bg-white dark:bg-slate-800 border-b border-slate-300 dark:border-slate-700 flex flex-wrap gap-2">
+        {quickPrompts.map((qp, index) => (
+          <button
+            key={index}
+            onClick={() => handleSendMessage(qp.text)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-3 py-1 rounded-md transition"
+          >
+            {qp.label}
+          </button>
+        ))}
+      </div>
+
       <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
         <ChatWindow messages={messages} />
         {error && (
-            <div className="flex justify-center">
-                <p className="text-red-500 bg-red-100 dark:bg-red-900/50 p-2 rounded-md text-sm">{error}</p>
-            </div>
+          <div className="flex justify-center">
+            <p className="text-red-500 bg-red-100 dark:bg-red-900/50 p-2 rounded-md text-sm">
+              {error}
+            </p>
+          </div>
         )}
       </main>
-      <footer className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 md:p-6 sticky bottom-0">
+
+      {/* FOOTER WITH CREDIT */}
+      <footer className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 md:p-6">
         <InputBar
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           onSend={() => handleSendMessage(userInput)}
           isLoading={isLoading}
         />
+        <p className="text-center text-xs text-slate-500 mt-3">
+          Developed by Dipakshi Kedia, 2025
+        </p>
       </footer>
     </div>
   );
