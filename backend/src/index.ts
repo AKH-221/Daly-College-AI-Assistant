@@ -1,51 +1,28 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 
 dotenv.config();
 
 const app = express();
-
-// CORS configuration – allows local dev + Vercel frontend
-const allowedOrigins = [
-  "http://localhost:5173", // Vite dev
-  "http://localhost:3000", // Next/React dev (if you ever use it)
-  "https://your-vercel-frontend-url.vercel.app", // TODO: replace with your actual Vercel URL
-];
-
-app.use(
-  cors({
-    origin(origin, callback) {
-      // Allow REST clients / curl with no origin
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      console.warn("Blocked CORS origin:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
-
-// Handle preflight requests
-app.options("*", cors());
-
+app.use(cors());
 app.use(express.json());
 
-// Read API key from environment
 const apiKey = process.env.GEMINI_API_KEY;
 
-// Warn if key is missing, but still start the server so frontend can show a clear error
 if (!apiKey) {
   console.error(
-    "❌ GEMINI_API_KEY is NOT SET. Please add it in your backend/.env file (GEMINI_API_KEY=...) or in your hosting provider environment variables."
+    "❌ GEMINI_API_KEY is NOT SET. Please add it in Render → Environment → Variables or in a local .env file."
   );
 }
 
-// System instruction for Daly College AI Assistant
-const SYSTEM_INSTRUCTION = `
+const genAI = new GoogleGenerativeAI(apiKey || "");
+const MODEL_NAME = "gemini-2.5-flash";
+
+const model: GenerativeModel = genAI.getGenerativeModel({
+  model: MODEL_NAME,
+  systemInstruction: `
 You are the Daly College Indore AI Assistant.
 You must answer ONLY using Daly College information provided in this system instruction.
 You are NOT allowed to use any outside information, outside names, assumptions, or invented facts.
@@ -295,57 +272,41 @@ Boys’ Houses: Ashok, Vikram, Rajendra, Jawahar, Tagore.
 Girls’ Houses: Bharti (residential), Indira and Ahilya.
 Students reside in age-based residences like Malwa House, Holkar House, Bharti Junior, etc.
 Boarding House Coordinator roles as listed above.
-`;
+`,
+});
 
-// Gemini model setup
-const MODEL_NAME = "gemini-2.5-flash";
-let model: ReturnType<GoogleGenerativeAI["getGenerativeModel"]> | null = null;
-
-if (apiKey) {
-  const genAI = new GoogleGenerativeAI(apiKey);
-  model = genAI.getGenerativeModel({
-    model: MODEL_NAME,
-    systemInstruction: SYSTEM_INSTRUCTION,
-  });
-}
-
-// Simple health check
 app.get("/", (_req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
 
-// Chat endpoint
-app.post("/api/chat", async (req: Request, res: Response) => {
-  try {
-    if (!model) {
-      return res.status(500).json({
-        error:
-          "Gemini API key is not configured on the server. Please set GEMINI_API_KEY in backend/.env.",
-      });
-    }
+interface ChatRequestBody {
+  message?: string;
+}
 
+app.post("/api/chat", async (req: Request<{}, {}, ChatRequestBody>, res: Response) => {
+  try {
     const { message } = req.body;
 
-    if (!message || typeof message !== "string" || !message.trim()) {
-      return res.status(400).json({
-        error:
-          "Missing or invalid 'message' field. It must be a non-empty string.",
-      });
+    if (!message || typeof message !== "string") {
+      return res.status(400).json({ error: "Missing or invalid 'message' field" });
     }
 
     const contents = [
       {
         role: "user",
-        parts: [{ text: message }],
-      },
+        parts: [{ text: message }]
+      }
     ];
 
     const result = await model.generateContent({ contents });
 
-    let reply = "I am unable to generate a response at the moment.";
+    let reply = "";
 
-    if (result?.response && typeof result.response.text === "function") {
+    if (result && result.response && typeof result.response.text === "function") {
       reply = result.response.text();
+    } else {
+      console.error("⚠️ Unexpected Gemini response format:", result);
+      reply = "Sorry, I couldn't generate a response right now.";
     }
 
     return res.json({ reply });
@@ -353,18 +314,12 @@ app.post("/api/chat", async (req: Request, res: Response) => {
     console.error("💥 Gemini Error:", error);
     return res.status(500).json({
       error: "Failed to connect to Gemini",
-      details: error?.message || "Unknown error",
+      details: error?.message || "Unknown error"
     });
   }
 });
 
 const PORT = process.env.PORT || 8080;
-
 app.listen(PORT, () => {
-  if (!apiKey) {
-    console.warn(
-      "⚠️ Server is running but GEMINI_API_KEY is missing. /api/chat will return 500 until you set it."
-    );
-  }
   console.log(`🚀 Backend running on port ${PORT}`);
 });
