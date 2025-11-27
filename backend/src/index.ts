@@ -1,28 +1,40 @@
+// backend/src/index.ts
+
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ✅ CORS FIXED FOR LOCAL + VERCEL
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",            // local frontend (vite)
+      "http://localhost:8080",            // backend (for safety)
+      "https://your-frontend.vercel.app"  // replace with your real Vercel URL
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(express.json());
 
+// 🔑 Load Gemini API Key
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  console.error(
-    "❌ GEMINI_API_KEY is NOT SET. Please add it in Render → Environment → Variables or in a local .env file."
-  );
+  console.error("❌ GEMINI_API_KEY is NOT SET.");
 }
 
-const genAI = new GoogleGenerativeAI(apiKey || "");
-const MODEL_NAME = "gemini-2.5-flash";
+const genAI = new GoogleGenerativeAI(apiKey!);
 
-const model: GenerativeModel = genAI.getGenerativeModel({
-  model: MODEL_NAME,
-  systemInstruction: `
+// ⭐ Your system instructions (from your project prompt)
+const systemPrompt = `
 You are the Daly College Indore AI Assistant.  
 You must answer ONLY using Daly College information provided in this system instruction.  
 You are NOT allowed to use any outside information, outside names, assumptions, or invented facts.  
@@ -211,54 +223,53 @@ Provide clean, accurate, reliable Daly College information based ONLY on:
 - The official creator information  
 
 NOTHING ELSE.
-`,
-});
+`;
 
-app.get("/", (_req: Request, res: Response) => {
-  res.send("Daly College AI Assistant backend is running ✅");
-});
-
-interface ChatRequestBody {
-  message?: string;
-}
-
-app.post("/api/chat", async (req: Request<{}, {}, ChatRequestBody>, res: Response) => {
+// ------------------------------------------------------
+// 🚀 API ROUTE
+// ------------------------------------------------------
+app.post("/api/chat", async (req: Request, res: Response) => {
   try {
-    const { message } = req.body;
+    const { message, history } = req.body;
 
-    if (!message || typeof message !== "string") {
-      return res.status(400).json({ error: "Missing or invalid 'message' field" });
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
     }
 
-    const contents = [
-      {
-        role: "user",
-        parts: [{ text: message }]
-      }
+    // Build conversational context
+    const conversation = [
+      { role: "system", content: systemPrompt },
+      ...history.map((h: any) => ({
+        role: h.role,
+        content: h.content,
+      })),
+      { role: "user", content: message },
     ];
 
-    const result = await model.generateContent({ contents });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    let reply = "";
+    const promptText = conversation
+      .map((msg) => `${msg.role}: ${msg.content}`)
+      .join("\n");
 
-    if (result && result.response && typeof result.response.text === "function") {
-      reply = result.response.text();
-    } else {
-      console.error("⚠️ Unexpected Gemini response format:", result);
-      reply = "Sorry, I couldn't generate a response right now.";
-    }
+    const result = await model.generateContent(promptText);
+    const reply = result.response.text();
 
     return res.json({ reply });
   } catch (error: any) {
-    console.error("💥 Gemini Error:", error);
+    console.error("🔥 Backend Error:", error);
     return res.status(500).json({
-      error: "Failed to connect to Gemini",
-      details: error?.message || "Unknown error"
+      error: "Internal server error",
+      details: error?.message || "Unknown error",
     });
   }
 });
 
+// ------------------------------------------------------
+// 🚀 START SERVER
+// ------------------------------------------------------
 const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
-  console.log(`🚀 Backend running on port ${PORT}`);
+  console.log(`✅ Backend running on http://localhost:${PORT}`);
 });
