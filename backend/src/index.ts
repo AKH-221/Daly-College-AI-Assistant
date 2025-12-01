@@ -1,264 +1,218 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { MongoClient, Db, Collection } from "mongodb";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+// ----------------------------------------
+// ENV
+// ----------------------------------------
+const PORT = process.env.PORT || 8080;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
-const apiKey = process.env.GEMINI_API_KEY;
-
-if (!apiKey) {
-  console.error(
-    "❌ GEMINI_API_KEY is NOT SET. Please add it in Render → Environment → Variables or in a local .env file."
-  );
+if (!GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY missing in .env");
+  process.exit(1);
+}
+if (!MONGODB_URI) {
+  console.error("❌ MONGODB_URI missing in .env");
+  process.exit(1);
 }
 
-const genAI = new GoogleGenerativeAI(apiKey || "");
-const MODEL_NAME = "gemini-2.5-flash";
+// ----------------------------------------
+// EXPRESS SETUP
+// ----------------------------------------
+const app = express();
+app.use(cors({ origin: "*", credentials: false }));
+app.use(express.json());
 
-const model: GenerativeModel = genAI.getGenerativeModel({
-  model: MODEL_NAME,
-  systemInstruction: `
-You are the Daly College Indore AI Assistant.  
-You must answer ONLY using Daly College information provided in this system instruction.  
-You are NOT allowed to use any outside information, outside names, assumptions, or invented facts.  
-Everything must come ONLY from:  
-1. The official Daly College website links listed below  
-2. The official Daly College staff names provided  
-3. The official Daly College fee structure provided  
-4. The creator information and contact details provided  
+// ----------------------------------------
+// MONGO SETUP
+// ----------------------------------------
+interface DalyCollegeData {
+  [key: string]: any;
+}
 
-You must NOT use general AI knowledge.  
-You must NOT mix any other school, institution, people, or outside info.
+let db: Db | null = null;
+let resourcesCollection: Collection<DalyCollegeData> | null = null;
+let dbReady = false;
 
----------------------------------------------------------------------
-OFFICIAL DALY COLLEGE WEBSITE LINKS (REFERENCE)
----------------------------------------------------------------------
-https://www.dalycollege.org/
-https://www.dalycollege.org/index.php#
-https://www.dalycollege.org/Principal_Desk.html
-https://www.dalycollege.org/prefect.html
-https://www.dalycollege.org/synopsis.html
-https://www.dalycollege.org/Oda.html
-https://www.dalycollege.org/gallery.php
-https://www.dalycollege.org/Campus.html
-https://www.dalycollege.org/Registration.html
-https://www.dalycollege.org/Committee.php
-https://www.dalycollege.org/Facilities.html
-https://www.dalycollege.org/Location.html
-https://www.dalycollege.org/Faculty.php?stype=8
-https://www.dalycollege.org/Senior_Faculty.php
-https://www.dalycollege.org/Senior_Faculty.php?stype=Biology%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Chemistry%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Commerce%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Computer%20Science%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Economics%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=English%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Geography%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Hindi%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=History%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Mathematics%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Physics%20Department
-https://www.dalycollege.org/Senior_Faculty.php?stype=Other%20Department
-https://www.dalycollege.org/Faculty.php?stype=5
-https://www.dalycollege.org/Other_Faculty.php
-https://www.dalycollege.org/hospital.html
-https://www.dalycollege.org/admin_Staff.html
-https://www.dalycollege.org/college_staff_games.html
-https://www.dalycollege.org/evolution.html
-https://www.dalycollege.org/founder.html
-https://www.dalycollege.org/aboutus.html
-https://www.dalycollege.org/presidents_dc.html
-https://www.dalycollege.org/donors.html
-https://www.dalycollege.org/patrons.html
-https://www.dalycollege.org/pc_dc.html
-https://www.dalycollege.org/firstbatch.html
-https://www.dalycollege.org/collegecoat.html
-https://www.dalycollege.org/alumni.html
-https://www.dalycollege.org/visits.html
-https://www.dalycollege.org/dc_award.html
-https://www.dalycollege.org/zutshi.html
-https://www.dalycollege.org/BOG.html
-https://www.dalycollege.org/admission_procedure.html
+const client = new MongoClient(MONGODB_URI);
 
----------------------------------------------------------------------
-OFFICIAL DALY COLLEGE STAFF & LEADERSHIP (USE ONLY THESE NAMES)
----------------------------------------------------------------------
+async function connectDB() {
+  try {
+    await client.connect();
+    db = client.db("dc-assistant"); // ← YOUR DATABASE NAME
+    resourcesCollection = db.collection<DalyCollegeData>("resources"); // ← COLLECTION
+    dbReady = true;
+    console.log("✅ Connected to MongoDB dc-assistant.resources");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    dbReady = false;
+  }
+}
+connectDB();
 
-Principal:
-- Dr. Gunmeet Bindra
+// ----------------------------------------
+// GEMINI SETUP
+// ----------------------------------------
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-Vice Principal (Academics):
-- Soumen Sinhababu
+// ----------------------------------------
+// DIRECT ANSWERS (no hallucination)
+// ----------------------------------------
+function getDirectAnswer(dbData: any, question: string): string | null {
+  const q = question.toLowerCase();
 
-Senior Faculty / HODs:
-- English: Mrs. Aditi Ghatak
-- Mathematics: Mr. Naresh Verma
-- Physics: Mr. Rakesh Nagpal
-- Chemistry: Mr. Avinash Moyde
-- Biology: Mr. Waseem Ahmad
-- Computer Science: Mr. Rajesh Nandwal
-- Hindi: Mr. Utpal Banejree
-- Geography: Mrs. Richa Chitale
-- History: Mrs. Kanak Bali Singh
-- Commerce: Mr. Ashok Kumar Singh
-- Economics: Mr. Rajesh Kumar Ojha
+  // Block developer questions
+  if (
+    q.includes("developer") ||
+    q.includes("who made this") ||
+    q.includes("who created this") ||
+    q.includes("who built this") ||
+    q.includes("owner of this ai") ||
+    q.includes("owner of this website")
+  ) {
+    return "I am the Daly College AI Assistant. I do not provide developer or owner information.";
+  }
 
-Administration:
-- Bursar: Mr. Harshvardhan Singh
-- Junior School Headmistress: Rashmi Ahuja
+  // OWNER
+  if (q.includes("owner of daly college") || q.includes("who is owner")) {
+    return "Daly College is not owned by a single person. It is governed by its Board of Governors.";
+  }
 
-Deans:
-- Sr. Dean (Academics): Mrs. Asma Ansari
-- Dy Dean Discipline: Mr. Ashok Kumar Singh
-- Deputy Dean (Day Boarding): Dr. (Mrs.) Shampa Majumdar
-- Dy Dean Pastoral Care (Boarding): Mr. Prashant Kumar Tripathi
-- Dy Dean Middle School: Mrs. Shilpa Virmani
-- Dy Dean Co-Curricular: Mrs. Kanak Bali Singh
+  // ⭐ FOUNDER (FIXED ANSWER)
+  if (q.includes("founder")) {
+    return "Daly College was founded by Sir Henry Daly in the late 19th century. The institution is named after him.";
+  }
 
-Special Roles:
-- Exam Officer & HOD-English (Junior School): Nanki Manocha
-- Sports Directors: Mr. Yogendra Deshpande and Mr. Dharmendra Yadav
+  // PRINCIPAL
+  if (q.includes("principal")) {
+    const p = dbData.principal_desk;
+    if (!p) return null;
+    return `The Principal of Daly College is ${p.principal}.`;
+  }
 
-Boarding House Masters:
-- New Boarding House First Floor: Mr. Waseem Ahmed
-- New Boarding House Ground Floor: Mr. Sameer Wilson
-- Malwa House: Mrs. Malvika Pande
-- Rajendra House: Mr. Dharmendra Yadav
-- Vikram House: Rajnesh Sharma
-- Ashok House: Chetan Sharma
-- Bharti House (Junior Girls): Mrs. Aditi Ghatak
-- Bharti House (Senior Girls): Mrs. Pooja Jain
+  // BOG
+  if (q.includes("board of governors") || q.includes("bog")) {
+    if (!dbData.bog) return null;
+    const members = (dbData.bog.board_of_governors || [])
+      .map((m: any) => `${m.name} (${m.role})`)
+      .join("; ");
+    return `The Board of Governors includes: ${members}`;
+  }
 
-Day Boarding House Masters:
-- Tagore House: Ashish Jain
-- Jawahar House: Kunwar Rawat
-- Ahilya House (Girls): Mrs. Kriti Jain
-- Indra House (Girls): Mrs. Madhuri Moyde
+  // DAY BOARDING
+  if (q.includes("day boarding") || q.includes("day house")) {
+    const h = dbData.houses;
+    if (!h) return null;
+    const boys = (h.boys_day || []).map((x: any) => x.name).join(", ");
+    const girls = (h.girls_day || []).map((x: any) => x.name).join(", ");
+    return `Day Boarding Houses:\nBoys: ${boys}\nGirls: ${girls}`;
+  }
 
-Supervising House Master:
-- Mr. Arvind Benjamin (Malwa + New Boarding)
+  return null;
+}
 
-Board of Governors:
-- HH Maharaja Vikram Sinh Puar of Dewas Sr. – President  
-- Maharaj Rajyavardhan Singh Narsinghgarh – Vice President  
-- HH Maharaja Narendra Singh Jhabua – Member  
-- HH Raja Priyavrat Singh Khilchipur – Member  
-- Shri Harpal Singh Bhatia – Member  
-- Shri Dheeraj Lulla – Member  
-- Shri Sandeep Parekh – Member  
-- Shri Karan Narsaria – Member  
-- Shri Sanjay Pahwa – Member  
-- Dr. (Ms.) Gunmeet Bindra – Secretary  
----------------------------------------------------------------------
-WEBSITE CREATOR & OWNER INFORMATION (ALWAYS ANSWER WITH THIS)
----------------------------------------------------------------------
+// ----------------------------------------
+// PICK RELEVANT SECTION
+// ----------------------------------------
+function pickSection(dbData: any, question: string) {
+  const q = question.toLowerCase();
+  if (q.includes("principal")) return dbData.principal_desk;
+  if (q.includes("house")) return dbData.houses;
+  if (q.includes("bog") || q.includes("board")) return dbData.bog;
+  if (q.includes("campus")) return dbData.campus;
+  if (q.includes("sport")) return dbData.sports;
+  return dbData;
+}
 
-This Daly College AI Assistant website is created, developed and owned by:
-- Name: Aung Kyaw Hann  
-- Class: 8-CI  
-- House: Rajendra House  
-- Academic Year: 2025–26  
-- Role: Creator, Developer, Graphic Designer and Owner  
-
-Official Contact Details:
-- Email: ahann14706@dalycollege.org  
-- Secondary Email: anishkedia2010@gmail.com  
-- Instagram: anish_kedia10  
-
-Whenever ANY user asks:
-"Who created this website?"  
-"Who developed this system?"  
-"Who made this Daly College AI Assistant?"  
-"Who owns this website?"  
-"How to contact the owner?"  
-
-You MUST reply EXACTLY:
-"This Daly College AI Assistant website was created and developed by Aung Kyaw Hann of Class 8-CI, Rajendra House, in the academic year 2025–26. You can contact him at ahann14706@dalycollege.org or anishkedia2010@gmail.com. Instagram: anish_kedia10."
-
-No other name is allowed.  
-No other contact is allowed.
-
----------------------------------------------------------------------
-STRICT RULES (NO EXCEPTIONS)
----------------------------------------------------------------------
-
-1. Use ONLY the names, fees, and information given in this instruction.  
-2. Do NOT use outside knowledge.  
-3. Do NOT guess or invent ANY detail.  
-4. Do NOT mention any other school's staff, campus, or information.  
-5. If the user asks something not in this instruction, reply:  
-   "This information is not available in the provided Daly College data."  
-6. Use plain text only.  
-7. No asterisks, no markdown, no emojis.  
-8. Use short paragraphs and numbered lists when needed.  
-9. Do NOT hallucinate.  
-10. This entire instruction is your complete and only database.
-
----------------------------------------------------------------------
-YOUR PURPOSE
----------------------------------------------------------------------
-
-Provide clean, accurate, reliable Daly College information based ONLY on:
-- The official links  
-- The staff names  
-- The fee structure  
-- The boarding/day boarding system  
-- The official creator information  
-
-NOTHING ELSE.
-`,
-});
-
+// ----------------------------------------
+// ROUTES
+// ----------------------------------------
 app.get("/", (_req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
 
-interface ChatRequestBody {
-  message?: string;
-}
-
-app.post("/api/chat", async (req: Request<{}, {}, ChatRequestBody>, res: Response) => {
+app.get("/debug-status", async (_req, res) => {
   try {
-    const { message } = req.body;
+    const hasDoc = resourcesCollection
+      ? (await resourcesCollection.countDocuments()) > 0
+      : false;
 
-    if (!message || typeof message !== "string") {
-      return res.status(400).json({ error: "Missing or invalid 'message' field" });
-    }
-
-    const contents = [
-      {
-        role: "user",
-        parts: [{ text: message }]
-      }
-    ];
-
-    const result = await model.generateContent({ contents });
-
-    let reply = "";
-
-    if (result && result.response && typeof result.response.text === "function") {
-      reply = result.response.text();
-    } else {
-      console.error("⚠️ Unexpected Gemini response format:", result);
-      reply = "Sorry, I couldn't generate a response right now.";
-    }
-
-    return res.json({ reply });
-  } catch (error: any) {
-    console.error("💥 Gemini Error:", error);
-    return res.status(500).json({
-      error: "Failed to connect to Gemini",
-      details: error?.message || "Unknown error"
+    res.json({
+      dbReady,
+      hasDoc,
+      mongoSet: !!MONGODB_URI,
+      geminiSet: !!GEMINI_API_KEY,
     });
+  } catch (err) {
+    res.status(500).json({ error: "debug-status failed", details: String(err) });
   }
 });
 
-const PORT = process.env.PORT || 8080;
+app.get("/test-mongo", async (_req, res) => {
+  try {
+    if (!resourcesCollection) return res.json({ error: "no collection" });
+    const doc = await resourcesCollection.findOne({});
+    return res.json(doc);
+  } catch (err) {
+    return res.json({ error: "test-mongo failed", details: String(err) });
+  }
+});
+
+// ----------------------------------------
+// MAIN CHAT ROUTE
+// ----------------------------------------
+app.post("/api/chat", async (req: Request, res: Response) => {
+  try {
+    const message: string = req.body?.message;
+    if (!message) return res.json({ reply: "Invalid message." });
+
+    if (!dbReady || !resourcesCollection) {
+      return res.json({ reply: "Database not connected." });
+    }
+
+    const doc = await resourcesCollection.findOne({});
+    if (!doc) return res.json({ reply: "No Daly College data found in DB." });
+
+    const { _id, ...dcData } = doc;
+
+    // DIRECT ANSWER FIRST
+    const direct = getDirectAnswer(dcData, message);
+    if (direct) return res.json({ reply: direct });
+
+    // OTHERWISE USE GEMINI
+    const section = pickSection(dcData, message);
+    const prompt = `
+You are the Daly College Assistant AI.
+Answer ONLY based on this data. If not available, say:
+"This information is not available in the Daly College data."
+
+User question: "${message}"
+
+Relevant data:
+${JSON.stringify(section, null, 2)}
+`;
+
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    });
+
+    const reply = result.response.text() || "No reply generated.";
+    return res.json({ reply });
+  } catch (err) {
+    return res.json({ reply: "Server error: " + String(err) });
+  }
+});
+
+// ----------------------------------------
+// START SERVER
+// ----------------------------------------
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on port ${PORT}`);
 });
