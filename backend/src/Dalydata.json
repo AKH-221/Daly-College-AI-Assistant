@@ -1,260 +1,534 @@
-[
-  {
-    "key": "principal_message",
-    "category": "leadership",
-    "title": "Message from the Principal",
-    "content": "At Daly College, our goal is to nurture confident, compassionate, and future-ready young individuals. We believe in fostering curiosity, creativity, and character through a holistic educational approach. Students are encouraged to think critically, communicate effectively, collaborate with peers, and uphold strong values. Daly College continues to honor its legacy while embracing innovation for a rapidly evolving world."
+{
+  "school_name": "Daly College",
+  "location": "Indore, Madhya Pradesh, India",
+  "established_year": 1870,
+  "type": "Co-educational Day and Boarding School",
+  "affiliations": [
+    "Council for the Indian School Certificate Examinations (CISCE)",
+    "Cambridge Assessment International Education (CAIE)"
+  ],
+  "motto": "Gyanamev Shakti (Knowledge is Power)",
+  "principal": "Dr. (Ms) Gunmeet Bindra",
+  "campus_size_acres": 118,
+  "student_strength": 1500,
+  "academic_programs": [
+    "ICSE (Class X)",
+    "ISC (Class XII)",
+    "Cambridge IGCSE (Class X)",
+    "Cambridge AS & A Levels (Class XII)"
+  ],
+  "notable_alumni_categories": [
+    "Politicians",
+    "Business Leaders",
+    "Academicians",
+    "Artists",
+    "Sports Personalities"
+  ],
+  "facilities": [
+    "Modern Classrooms",
+    "Science and Computer Labs",
+    "Library",
+    "Sports Complex",
+    "Auditorium",
+    "Hostels",
+    "Dining Halls"
+  ],
+
+  "principal_desk": {
+    "title": "From the Principal's Desk",
+    "author": "Dr. Gunmeet Bindra",
+    "content": "The Lion King, as a Disney animated film, not only entertained an audience, but also shared wisdom about real-life experiences.\n\nIn their conversation, Simba curiously looks into the sky and says, \"Looks like the winds are changing.\"\n\nRafiki responds, \"Ahh, change is good.\"\n\nThis is a line that resonates deeply with me: \"Change is good.\" In the realm of education, this statement holds tremendous significance. When we embrace change, we become catalysts for growth, not just in the lives of our students but also within ourselves. Having served just over a year in this esteemed, vintage legacy day-cum boarding school as its pioneering female Principal, in all humility, I am conscious of the responsibility that this change brings in.\n\nThe sheer manifestation of life lies solely in its inherent growth, and the active involvement of our students in a diverse range of sporting, cultural, and literary pursuits and bringing home accolades serve as an undeniable testament to their progressive development over time.\n\nWe are currently engaging with Generation Alpha and Generation Z, cohorts that possess an innate familiarity with the cloud, social media, and mobile technology due to having grown up with these innovations. They’ve known and adapted to these since birth – are also open to more technology, more changes, more adaptations. With the necessary knowledge and expertise, I reckon, they will be empowered to generate value that extends beyond their own generation, benefiting future generations as well.\n\nOur genuine self-awareness flourishes when we forge meaningful connections with others. One pivotal way for me to foster this connection with the children is through the morning assembly, which provides an optimal opportunity for me to cultivate a bond with them and where I consistently emphasize the significance of pockets of time and the multitude of benefits they offer. By making the most of these interstices, we can optimize our efficiency and achieve meaningful outcomes.\n\nBreathing new life into the school's cherished heritage, a current atmosphere of fervour and eagerness permeates the air. The school is consistently abuzz with a vibrant energy that pervades every aspect of learning, co-curricular endeavours, and beyond.\n\n\"Skill is the foundation upon which talent builds its masterpiece.\" Driven by continuous efforts to enhance and refine their skills, students venture into uncharted territories and unleash their untapped aptitude.\n\nThe world has changed and so have we. Drawing upon over 150 years of rich experience, we hold our traditions in high regard. However, we recognize the utmost significance of adapting to the ever- evolving world around us.\n\nAs I come to a close, let us embrace the power of \"now.\" Each moment presents a chance for us to make a positive impact and create lasting change. Let us embark on this exciting journey, let us seize the present moment and make the most of it. C'est la vie!\n\nGod bless!\nDr. Gunmeet Bindra"
   },
-  {
-    "key": "vision",
-    "category": "identity",
-    "title": "School Vision",
-    "content": "To be a leading school in India that prepares students to become global citizens with strong values, academic strength, leadership skills, and sensitivity toward society and the environment. We aim to equip students with 21st-century competencies, ethical foundations, and a lifelong love for learning."
+
+  "dc_synopsis": {
+    "famous_alumni": [
+      { "name": "Dr. C. S. Ranawat", "field": "Medicine" },
+      { "name": "Dr. Sudhir Khetawat", "field": "Medicine" },
+      { "name": "Dr. Kanwaljeet Anand", "field": "Professor Pediatrics, Le Bonheur Children’s Medical Centre, USA" },
+      { "name": "Raj Singh Dungarpur", "field": "Cricket" },
+      { "name": "Hanumant Singh", "field": "Cricket" },
+      { "name": "Nawabzada Shahryar Muhammad Khan", "field": "Foreign Secretary & Chairman of Pakistan Cricket Board" },
+      { "name": "Rohit Nagu", "field": "Financial Officer, International Cricket Council, Dubai" },
+      { "name": "Ranjan Dass", "field": "CEO SAP India" },
+      { "name": "Digvijaya Singh Raghogarh", "field": "Public Life" },
+      { "name": "Laxman Singh Raghogarh", "field": "Public Life" },
+      { "name": "Arun Yadav", "field": "Public Life" },
+      { "name": "Nagendra Singh Nagod", "field": "Member of Parliament" },
+      { "name": "Bhanu Prakash Singh Narsinghgarh", "field": "Former Central Minister & Governor of Goa" },
+      { "name": "Deepak Obhrai", "field": "Member of Canadian Parliament" },
+      { "name": "Dheeraj Bora", "field": "ISRO Scientist" },
+      { "name": "Mahima Gupta", "field": "Nuclear Scientist" },
+      { "name": "Dr. Amrita Tiwari", "field": "Nuclear Scientist" },
+      { "name": "Prof. Prabhat Patnaik", "field": "JNU" },
+      { "name": "Prof. Ashwin Naik", "field": "Buffalo University" },
+      { "name": "Prof. Dinyar Godrej", "field": "Oxford" },
+      { "name": "Ram Pratap Singh", "field": "Administrative Service" },
+      { "name": "Vijayendra Ghatge", "field": "Actor" },
+      { "name": "Kiran Kumar", "field": "Actor" },
+      { "name": "Bikram Saluja", "field": "Actor" },
+      { "name": "Rayman Saluja", "field": "Actor" },
+      { "name": "Vidhi Ghodgaonkar", "field": "Assistant Director, Films" },
+      { "name": "Vikram Modi", "field": "Head of Visa, Singapore" },
+      { "name": "Praveen Kankaria", "field": "Impetus, Software Entrepreneur" },
+      { "name": "Rajeev Tipnis", "field": "Software Entrepreneur" },
+      { "name": "Vikram Rajadhyaksha", "field": "Entrepreneur" },
+      { "name": "Gajendra Singh Sareen", "field": "Founder & CEO, Omni Tyres, Singapore" },
+      { "name": "Yashowardhan Kauns", "field": "Art" },
+      { "name": "Ira Trivedi", "field": "Author" },
+      { "name": "Panni Patgaonkar", "field": "Architect & Interior Designer" },
+      { "name": "Sandeep Kothari", "field": "Fidelity, Asia" },
+      { "name": "Siddharth Sethi", "field": "Infobeans" }
+    ],
+    "patrons_since_1882": [
+      "HE Lord Willington, Viceroy of India",
+      "HE Lord Linlithgow, Viceroy of India",
+      "HE Field Marshal, Lord Wavell, Viceroy of India",
+      "HE Admiral of the Fleet, Lord Mountbatten, Viceroy of India",
+      "HH Maharaja Sir George Jivaji Rao Scindia of Gwalior",
+      "HH Maharajadhiraj Yeshwant Rao Holkar of Indore",
+      "HH Maharajadhiraj Martand Singh of Rewa",
+      "HH Maharaja Madhav Rao Scindia of Gwalior",
+      "HH Maharani Usha Devi Holkar of Indore",
+      "HH Maharajadhiraj Pushpendra Singh Ju Deo of Rewa",
+      "Raja Digvijaya Singh of Raghogarh",
+      "Shri Mukesh Dhirubhai Ambani",
+      "HH Maharaja Jyotiraditya Scindia of Gwalior"
+    ],
+    "academics": {
+      "summary": "Academic Results for 2014 have been excellent. Class 10 and Class 12 results reflect very strong performance across subjects.",
+      "class_10_cgpa_results": {
+        "cgpa_10": 15,
+        "cgpa_9_8": 2,
+        "cgpa_9_6": 7,
+        "cgpa_9_4": 10,
+        "cgpa_9_2": 10,
+        "cgpa_9_0": 11
+      },
+      "class_12_overview": "Class 12 results were even better than the previous year: 136 students have got a distinction in all subjects.",
+      "class_12_subject_averages": {
+        "Physical Education": 92.3,
+        "Fine Arts": 90.9,
+        "Computer Science": 89.6,
+        "Web Tech": 88.5,
+        "Political Science": 88.1,
+        "Chemistry": 84.3,
+        "Geography": 84.2,
+        "English": 83.6,
+        "Biology": 82.8,
+        "Economics": 81.8,
+        "Business Studies": 81.5,
+        "Entrepreneurship": 81.4
+      },
+      "stream_toppers": {
+        "Commerce": { "name": "Astha Juneja", "percentage": 96.4, "note": "Commerce and School Topper" },
+        "Humanities": { "name": "Namrata Nair", "percentage": 94.6 },
+        "PCM": { "name": "Aditya Raj Deshlahara", "percentage": 94.4 },
+        "Biology": { "name": "Bijit Bharali", "percentage": 94.0 }
+      }
+    },
+    "internationalism_and_global_exposure": {
+      "round_square": {
+        "description": "Round Square is the core of Internationalism at DC. Students and teachers benefit from multiple global platforms.",
+        "highlights": [
+          "More than 150 students have participated in Model United Nations programmes in the last two years in India and abroad.",
+          "Round Square International Conference hosted in 2007 at DC.",
+          "Seen as one of the best Indian schools to partner for internationalism.",
+          "6 students attended Annual Round Square International Conference in Florida.",
+          "Around 60 students attended South Asia & Gulf Regional Round Square Conferences in 2013."
+        ]
+      },
+      "g20_and_gales": {
+        "g20": "The G-20 group of Iconic Heads from prestigious schools across the world attended the G-20 conference in February 2013 at DC.",
+        "gales": "GALES (Global Alliance of Leading-Edge Schools), with partners from 25+ countries, has only one Indian partner – DC. Its bi-annual summit venue was shifted from Raffles Institution, Singapore to DC, Indore in October 2014."
+      },
+      "afs_and_exchanges": {
+        "afs_role": "AFS provides scholarships and incoming/outgoing group exchanges for DC students.",
+        "joint_study": "A joint US, Australia & UK study of 10 schools in 10 countries on adapting to globalisation selected DC as the only Indian school.",
+        "teacher_training": "Postgraduate teacher trainees from Melbourne School of Education, Australia visit DC annually for their practical stint.",
+        "indian_culture_course": "A three-week course on Indian Culture run by DC attracts students, especially from Canada.",
+        "two_years_mobility": {
+          "outbound_students": 31,
+          "outbound_countries": [
+            "USA",
+            "Australia",
+            "Thailand",
+            "Scotland",
+            "Canada",
+            "South Africa",
+            "Germany",
+            "Peru"
+          ],
+          "inbound_students": 24,
+          "inbound_countries": 9,
+          "group_visits_from_schools": [
+            "Woodleigh School, Australia",
+            "Shenzhen (Nanshan) Concord College of Sino-Canada, China",
+            "Ivanhoe, Australia"
+          ],
+          "afs_detailed": {
+            "students_outgoing_afs": 25,
+            "afs_destinations": ["Hungary", "Germany", "Italy"],
+            "long_term_inbound_afs_students": [
+              "Italy",
+              "Germany",
+              "Russia"
+            ],
+            "short_term_afs_students_from_germany": 2,
+            "hindi_language_program_students_from_usa": 5,
+            "afs_russian_group_visit": "11 students and 2 teachers from Russia visited for a fortnight."
+          }
+        },
+        "teachers_and_leaders": {
+          "overseas_teachers_visited": 9,
+          "teacher_exchanges": [
+            "Denmark",
+            "United States of America"
+          ],
+          "leadership_and_summits": [
+            "Senior Vice Principal attended Deputy Heads G-20 Conference at Wellington, Eton & Marlborough in the UK.",
+            "Senior Vice Principal and students attended the swearing-in ceremony of President Obama as part of a Leadership Conference in Washington.",
+            "Two students and a teacher attended the 'Ideas to Change the World' Summit at Raffles, Singapore.",
+            "10 students and a teacher attended a 10-day conference at Stanford University."
+          ]
+        }
+      }
+    },
+    "co_curricular": {
+      "major_events_hosted": [
+        "IPSC Dance Festival 2021",
+        "IPSC Music Festival 2022",
+        "Annual Invitational Debates (Hindi and English) plus Quiz with schools from all over India",
+        "DC MUN conferences since 2014",
+        "IPSC MUN hosted first in 2017",
+        "IPSC French Fest (initiative to encourage French language) – July 2023"
+      ],
+      "departments_and_achievements": {
+        "performing_arts": "Performing arts department (Drama, Music, Dance) is very strong and students have received outstanding performance awards in various IPSC events.",
+        "visual_arts": "Visual arts department has brought laurels in most segments of IPSC Art.",
+        "literary_quiz": "English and Hindi Literary Departments, along with quizzers, have won numerous awards."
+      }
+    },
+    "sports_facilities_and_achievements": {
+      "world_class_facilities": [
+        "Two BCCI approved cricket grounds which have hosted Ranji Trophy matches",
+        "Floodlit AITA approved four Turf Tennis Courts",
+        "Olympic size swimming pool",
+        "Floodlit synthetic surface Basketball Courts",
+        "Four Football fields",
+        "Three Hockey grounds",
+        "Standard 400m athletic track and field",
+        "International 10m indoor (air-conditioned) Shooting range",
+        "50m and 25m outdoor shooting ranges",
+        "SRFI approved nine glass-backed squash courts",
+        "150m floodlit Skating rink",
+        "Table Tennis hall",
+        "Six Sports Pavilions",
+        "Sports climbing wall",
+        "Obstacle Course",
+        "State-of-the-art Fitness Centre",
+        "Gymnastics facilities",
+        "Modern Centre for Badminton",
+        "Horse riding facilities"
+      ],
+      "major_achievements": [
+        "Maximum number of medals in events conducted by CBSE and School Games Federation of India.",
+        "35 students in Under-19 category qualified for National Level events in one year.",
+        "Current champions in IPSC Shooting for Girls.",
+        "Current champions in IPSC Tennis for Girls.",
+        "Current champions in IPSC Swimming for Boys.",
+        "Current champions in IPSC Squash for Boys.",
+        "Current champions in IPSC Six-A-Side Cricket Tournament for Boys.",
+        "Khelo India medalists in Tennis.",
+        "Girls from DC participated in Jr. Wimbledon Championship and Jr. French Open Championship.",
+        "5 Dalians participated in Khelo India School Games.",
+        "2 Dalians received Khelo India Scholarship.",
+        "3 students participated in Fin Swimming World Cup Round 2022.",
+        "DC won the 2nd All India National Speed Skating Ranking Championship 2022.",
+        "A girl from DC participated in Asian Youth Chess Championship 2022.",
+        "Dalians have participated in International Squash tournaments.",
+        "DC Tennis players compete in renowned international circuit championships.",
+        "3 students received Eklavya Award from Government of Madhya Pradesh (2 in Equestrian, 1 in Squash)."
+      ]
+    },
+    "community_service": {
+      "service_club_name": "The Daly Ethos",
+      "initiatives": [
+        "IPSC Service Project at Maharani Gayatri Devi School, Jaipur: skill-enhancing activities, NGO and Old Age Home visits, and skits on social issues.",
+        "DC Service Day on October 2nd: underprivileged children from VAMA School, Musakhedi visit DC for skill-based workshops (reusing newspapers to make envelopes and paper bags).",
+        "Tree plantation drives and fundraising events.",
+        "First-aid session for all students to prepare them for emergencies, especially important after COVID-19."
+      ],
+      "paper_recycling": {
+        "plant_installed_year": 2004,
+        "process": "Waste paper collected through DC waste-paper boxes in every building and boarding house, then recycled into bags, envelopes, files and other articles for events and daily activities.",
+        "recent_drive": {
+          "books_collected": 200,
+          "clothes_collected_pairs": 350,
+          "book_distribution_location": "Bal Vinay Mandir School",
+          "clothes_distribution_location": "Musakhedi Slum"
+        },
+        "philosophy": "Service forms a crucial part of students’ life at DC and the school constantly explores opportunities to serve society."
+      }
+    },
+    "environment_conservation": {
+      "awareness_and_workshops": [
+        "Workshop on Garbage Management conducted by young professionals from Auroville for DC and 10 other schools.",
+        "Workshop by GRIHA on green certification hosted along with IIT Indore."
+      ],
+      "tree_plantation": {
+        "trees_planted": 70000,
+        "period": "2018–2021",
+        "method": "Japanese Miyawaki method",
+        "impact": "Temperature at DC is at least 3 degrees lower than the town."
+      },
+      "natural_habitat_and_recognition": {
+        "habitat": "DC is a natural habitat for peacocks.",
+        "award": "Karuna International, Chennai conferred DC as the Natural National Bird Sanctuary Institute of India in 2012."
+      },
+      "water_management": {
+        "description": "The entire campus is a catchment area designed to increase ground water level, supported by multiple methods.",
+        "ground_water_recharging_methods": [
+          "Lakes",
+          "Field Bunds",
+          "Recharging Pits",
+          "Rooftop Harvesting",
+          "Tube well Recharging",
+          "Sewage Treatment Plant"
+        ],
+        "water_recharging_from_lakes_litres": 42000000,
+        "sewage_treatment_plant": {
+          "capacity_litres_per_day": 60000,
+          "usage": "Used for maintaining gardens and playfields."
+        },
+        "irrigation_systems": [
+          "Sprinklers (Jet Rain Gun)",
+          "Pop up Sprinklers"
+        ],
+        "goal": "Moving towards a zero run-off campus."
+      },
+      "publications": [
+        "Book on Birds of DC (2013) – student and staff initiative.",
+        "Updated book on birds of DC titled \"The Avian Magnificence\" (2021).",
+        "Book on Trees of DC (2014)."
+      ],
+      "solar_energy": {
+        "solar_power_plant_kw": 200,
+        "installation_year": 2021,
+        "description": "A 200 kW Solar Power Plant installed in 2021 as a major step towards energy conservation."
+      }
+    }
   },
-  {
-    "key": "mission",
-    "category": "identity",
-    "title": "School Mission",
-    "content": "The Daly College strives to provide a balanced blend of academics, sports, co-curricular activities, leadership, and responsible citizenship. Our mission includes nurturing integrity, empathy, discipline, and independent thinking. We empower students with essential skills to succeed in higher education and in a diverse, global society."
+
+  "staff_entries": [
+    {
+      "key": "senior_appointments",
+      "category": "staff",
+      "title": "Senior Appointments",
+      "content": "• Dr. (Ms) Gunmeet Bindra – Principal | M.A., M.Ed., Ph.D. (Gold Medalist)\n• Mr. Soumen Sinhababu – Vice Principal | M.A., B.Ed.\n• Mr. Harshvardhan Singh – Bursar | HM, IFTB, M.A.(MTM)\n• Mrs. Rashmi Ahuja – Head Mistress, Jr. School | B.A., B.Ed.\n• Mrs. Asma Ansari – Sr. Dean Academics | M.A., B.Ed.\n• Nanki Manocha – Exam Officer (Cambridge Curriculum), Head Boarding Houses, HOD English Jr. School | BA English & Psychology, B.Ed.\n• Mr. Ashok Kumar Singh – Dy Dean Discipline | MBA(HRD), M.Com., M.A.(Eco.), M.A.(Pub.Admn.), M.A.(Sociology), M.A.(Psychology), B.Ed.\n• Dr. (Mrs.) Shampa Majumdar – Deputy Dean Day Boarding | M.A., B.Ed., Ph.D.\n• Mr. Prashant Kumar Tripathi – Dy Dean Pastoral Care (Boarding) | M.A., B.Ed.\n• Mrs. Shilpa Virmani – Dy Dean Middle School | M.A (Eco & English), B.Ed.\n• Mrs. Kanak Bali Singh – Dy Dean Co-Curricular Activities | B.A., B.Ed."
+    },
+    {
+      "key": "biology_department",
+      "category": "staff",
+      "title": "Biology Department",
+      "content": "• Mr. Waseem Ahmad – Senior Teacher | M.Sc., B.Ed. (NCERT Integrated)\n• Ms. Ritu Bhate – Senior Teacher | M.Sc.(Zoology), M.A.(Eng. Lit.), B.Ed.\n• Md Idul Ali – Senior Teacher | M.Sc., B.Ed."
+    },
+    {
+      "key": "chemistry_department",
+      "category": "staff",
+      "title": "Chemistry Department",
+      "content": "• Mr. Avinash Moyde – HOD Chemistry | M.Sc., M.Ed.\n• Mrs. Kirti Jain – Senior Teacher | M.Sc.(Inorganic Chemistry), B.Ed.\n• Mrs. Madhuri Moyde – Senior Teacher | M.Sc., M.Ed.\n• Mr. Ravindra Bhawnani – Senior Teacher | M.Sc.(Industrial Chem), M.Sc.(Physical Chem), B.Ed.\n• Mr. Bibhav Dwivedi – Senior Teacher | M.Sc. Chemistry"
+    },
+    {
+      "key": "commerce_department",
+      "category": "staff",
+      "title": "Commerce Department",
+      "content": "• Mr. Ashok Kumar Singh – Dy Dean Discipline | MBA(HRD), M.Com., M.A.(Eco.), M.A.(Pub.Admn.), M.A.(Sociology), M.A.(Psychology), B.Ed.\n• Mr. Siddharth Tiwari – Senior Teacher | M.Com., B.Ed., Diploma in Management\n• Mr. Yogesh Fasatey – Senior Teacher | M.Com., M.Phil., B.Ed.\n• Mr. Vinod Kumar Dawar – Senior Teacher | PG (Taxation), B.Ed.\n• Mr. Kriti Sundar Biswas – Senior Teacher | M.Com.(Taxation), B.Ed., LLB(Hons)\n• Mr. Amit Verma – Senior Teacher | M.Com., B.Ed., M.A.(Eng.)"
+    },
+    {
+      "key": "computer_science_department",
+      "category": "staff",
+      "title": "Computer Science Department",
+      "content": "• Mr. Rajesh Nandwal – HOD Computer Science | M.Sc., M.C.M.\n• Mrs. Bhawna Bhatnagar – Senior Teacher | M.C.M., E2Com.\n• Mr. Chetan Sharma – Senior Teacher | B.Sc., M.C.M., B.Ed.\n• Mr. Sameer Wilson – Senior Teacher | B.E. (Computer Science & Engineering)\n• Mr. Rajneesh Kumar Sharma – Senior Teacher | M.Sc.\n• Mr. Alok Kanoongo – Senior Teacher | B.Sc., B.Ed., M.C.A., M.Sc.(Electronics & Communication)"
+    },
+    {
+      "key": "economics_department",
+      "category": "staff",
+      "title": "Economics Department",
+      "content": "• Mrs. Asma Ansari – Sr. Dean Academics | M.A., B.Ed.\n• Mr. Rajesh Kumar Ojha – HOD Economics | M.A.(Eco & Sociology), B.Ed.\n• Dr. Yogeshwar Shukla – Senior Teacher | M.A., Ph.D., B.Ed., PGDCSA, UGC-NET\n• Ms. Sabiya Naaz – Senior Teacher | M.A.(Economics), B.Ed.\n• Mrs. Mousumi Sinhababu – Coordinator Cambridge Curriculum | M.A., B.Ed."
+    },
+    {
+      "key": "english_department",
+      "category": "staff",
+      "title": "English Department",
+      "content": "• Dr. (Mrs.) Shampa Majumdar – Dy Dean Pastoral (Senior Boarding) | M.A., Ph.D., B.Ed.\n• Mrs. Shilpa Virmani – Dy Dean Day Boarding | M.A (Eco & English), B.Ed.\n• Mrs. Aditi Ghatak – HOD English | M.A., B.Ed.\n• Mr. Sijo Mathew – Senior Teacher | M.A., M.Phil., B.Ed., M.Ed.\n• Mrs. Anamika Ojha – Senior Teacher | M.A.(Eng.), M.Phil.(Eng.), B.Ed.\n• Mr. Arindam Chattopadhyay – Senior Teacher | M.A.(English), B.Ed.\n• Mrs. Shweta Verma – Senior Teacher | M.A., B.Ed.\n• Dr. Pooja Jain – Coordinator Pastoral (Boarding) | B.Sc., M.A., Ph.D."
+    },
+    {
+      "key": "geography_department",
+      "category": "staff",
+      "title": "Geography Department",
+      "content": "• Mrs. Richa Chitale – Head of Geography | M.A., B.Ed., LLB\n• Dr. Anshu D’souza – Senior Teacher | B.A., M.A.(English Lit), M.A.(Geography), B.Ed., Ph.D.(Geography)\n• Mr. Gaurav Singh Rathore – Senior Teacher | B.A.(Hons Geo), M.A., NET"
+    },
+    {
+      "key": "hindi_department",
+      "category": "staff",
+      "title": "Hindi Department",
+      "content": "• Mr. Utpal Banerjee – Coordinator Class VII & HOD Hindi | M.A., B.Ed.\n• Dr. (Mrs.) Mudita Pachauri – Senior Teacher | M.A., B.Ed., Ph.D.\n• Mrs. Apoorva Banerjee – Senior Teacher | M.A., M.Phil., B.Ed.\n• Mr. Prashant Kumar Tripathi – Dy Dean Pastoral Care (Boarding) | M.A., B.Ed.\n• Mr. Brijesh Bhatore – Senior Teacher | M.A.(Hindi & Sanskrit), M.Phil., M.Ed."
+    },
+    {
+      "key": "history_department",
+      "category": "staff",
+      "title": "History Department",
+      "content": "• Mrs. Seema Chadha – Coordinator Class VIII | M.A., B.Ed.\n• Mrs. Kanak Bali Singh – Dy Dean Co-Curricular | B.A., B.Ed.\n• Mr. Kunwar Singh Rawat – Senior Teacher | M.A., B.Ed.\n• Mr. Tushar Guha – Senior Teacher | M.A.(History), M.A.(English Lit), B.Ed.\n• Mr. Chandan Kumar Singh – TGT Social Science | PGDSLM, M.A.(History), B.Ed.\n• Mr. Harminder Singh – Academic Teacher | M.A.(History), Master of Physical Education, B.Ed., NIS Certified"
+    },
+    {
+      "key": "mathematics_department",
+      "category": "staff",
+      "title": "Mathematics Department",
+      "content": "• Mr. Naresh Verma – HOD Maths | M.Sc., B.Ed.\n• Mr. Vijay Thatte – Senior Teacher | M.Sc., B.Ed.\n• Mr. Rakesh Kumar Jain – Senior Teacher | M.Sc., B.Ed.\n• Mr. Rajesh Dubey – Senior Teacher | M.Sc., B.Ed."
+    },
+    {
+      "key": "physics_department",
+      "category": "staff",
+      "title": "Physics Department",
+      "content": "• Mr. Rakesh Nagpal – HOD Physics | M.Sc., B.Ed.\n• Mr. Sharad Mishra – Senior Teacher | M.Sc., LLB, B.Ed.\n• Mr. Ashish Jain – Senior Teacher | M.Sc., B.Ed.\n• Mr. Sandeep Yeole – Senior Teacher | M.Phil.(Physics), M.Sc.(Electronics & Telecom), B.Ed.\n• Mrs. Ishmeet Singh – Senior Teacher | M.Sc.(Physics), B.Ed."
+    },
+    {
+      "key": "other_departments",
+      "category": "staff",
+      "title": "Other Departments (Dance, Arts, French, PE, Music, Psychology)",
+      "content": "• Mrs. Mridulika Agrawal – Student Counsellor | M.A.(Clinical Psychology), PG Counselling & Guidance\n• Mrs. Noopur Dube – Dance | M.A. Dance (Kathak), B.Ed.\n• Mrs. Priyanka Dave – Fine Arts | B.F.A., M.A.(History of Indian Art & Culture), B.Ed.\n• Ms. Arpita Dasgupta – Fine Arts | B.Fine (Graphics)\n• Mrs. Sarita Gangwani – French | B.Com., Diploma in French, B.Ed., M.Ed.\n• Mr. Yogendra Deshpande – Physical Education | M.P.Ed.\n• Mrs. Tanisha Behrani – French | B.Com., Diploma in French, B.Ed.\n• Mr. Dharmendra Yadav – Physical Education | BPEd, MPEd, Khelo India Master Trainer, AIFF Licence Coach\n• Mr. Rajendra Nagle – Vocal Music | B.Mus.\n• Ms. Deepika Tiwari – Psychology | Masters in Clinical Psychology, B.Ed."
+    },
+    {
+      "key": "additional_senior_teachers",
+      "category": "staff",
+      "title": "Additional Senior Teachers",
+      "content": "• Mr. Benedict John – Senior Teacher | M.Sc., B.Ed.\n• Mr. Madhup Kumar Pandey – Senior Teacher | M.Sc., B.Ed.\n• Ms. Archana Poore – Senior Teacher | M.Sc.(Statistics), B.Ed., Diploma in Guidance & Counselling\n• Mr. Pushkal Chaudhary – Senior Teacher | B.Tech (Electronics & Communication Engineering)"
+    }
+  ],
+
+  "boarding_houses": {
+    "main_boys_boarding": [
+      {
+        "name": "Rajendra House",
+        "type": "Main Boys Boarding House",
+        "house_master": "Mr. Dharmendra Yadav"
+      },
+      {
+        "name": "Vikram House",
+        "type": "Main Boys Boarding House",
+        "house_master": "Mr. Rajesh Sharma"
+      },
+      {
+        "name": "Ashok House",
+        "type": "Main Boys Boarding House",
+        "house_master": "Mr. Chetan Sharma"
+      }
+    ],
+    "age_wise_boys_boarding_buildings": [
+      {
+        "name": "New Boarding House - Ground Floor",
+        "type": "Age-wise Boys Boarding",
+        "house_master": "Mr. Sameer Wilson"
+      },
+      {
+        "name": "New Boarding House - First Floor",
+        "type": "Age-wise Boys Boarding",
+        "house_master": "Mr. Waseem Ahmed"
+      },
+      {
+        "name": "Malwa House",
+        "type": "Age-wise Boys Boarding",
+        "house_master": "Mrs. Malvika Pande"
+      }
+    ],
+    "girls_boarding": [
+      {
+        "name": "Sr. Bharti House",
+        "type": "Girls Boarding (Senior)",
+        "house_mistress": "Dr. Pooja Jain"
+      },
+      {
+        "name": "Jr. Bharti House",
+        "type": "Girls Boarding (Junior)",
+        "house_mistress": "Mrs. Aditi Ghatak"
+      }
+    ]
   },
-  {
-    "key": "motto",
-    "category": "identity",
-    "title": "School Motto",
-    "content": "\"Gyanamev Shakti\" – Knowledge is Power. This motto reflects the school's commitment to academic excellence, intellectual development, and the belief that true empowerment comes from learning, wisdom, and the pursuit of truth."
+
+  "day_boarding_houses": {
+    "boys_day_boarding": [
+      {
+        "name": "Jawahar House",
+        "type": "Day Boarding (Boys)",
+        "house_master": "Mr. Kunwar Singh Rawat"
+      },
+      {
+        "name": "Tagore House",
+        "type": "Day Boarding (Boys)",
+        "house_master": "Mr. Ashish Jain"
+      }
+    ],
+    "girls_day_boarding": [
+      {
+        "name": "Indra House",
+        "type": "Day Boarding (Girls)",
+        "house_mistress": "Mrs. Madhuri Moyde"
+      },
+      {
+        "name": "Ahilya House",
+        "type": "Day Boarding (Girls)",
+        "house_mistress": "Mrs. Kirti Jain"
+      }
+    ]
   },
-  {
-    "key": "history_synopsis",
-    "category": "heritage",
-    "title": "History of Daly College",
-    "content": "Daly College is one of India's oldest schools, rooted in tradition and excellence. It began under the guidance of British officers and Indian princely states, growing into a renowned institution that combines heritage with modern education. Its architecture, legacy buildings, royal associations, and long-standing traditions reflect the institution's remarkable evolution over the decades."
-  },
-  {
-    "key": "evolution",
-    "category": "heritage",
-    "title": "Evolution of Daly College",
-    "content": "Over the years, The Daly College has evolved from a small establishment serving royal families to a premier co-educational institution offering day and boarding facilities. With the introduction of new academic programs, modern infrastructure, international exchanges, advanced sports facilities, and a strong emphasis on holistic development, the school continues to innovate while preserving its historical essence."
-  },
-  {
-    "key": "heritage_legacy",
-    "category": "heritage",
-    "title": "Heritage and Legacy",
-    "content": "The Daly College proudly stands for royal elegance, historical relevance, and academic prestige. Its distinguished alumni, ceremonial traditions, heritage buildings, and long-standing relationship with princely states make it a symbol of pride. The school’s ethos blends tradition with modernity, preparing students for a global society without losing sight of Indian values."
-  },
-  {
-    "key": "internationalism_intro",
-    "category": "internationalism",
-    "title": "Internationalism and Global Exposure",
-    "content": "Daly College strongly promotes global awareness, multicultural learning, and a spirit of internationalism. Students participate in cultural exchanges, international competitions, global conferences, and collaborative projects. This exposure helps them develop empathy, cross-cultural understanding, adaptability, and a global mindset."
-  },
-  {
-    "key": "afs_programme",
-    "category": "internationalism",
-    "title": "AFS Intercultural Programme",
-    "content": "The AFS programme at Daly College encourages intercultural learning by providing students opportunities to travel abroad, stay with host families, attend partner schools, and engage in global cultural immersion. AFS fosters independence, communication skills, adaptability, and international friendships while strengthening students’ understanding of global citizenship."
-  },
-  {
-    "key": "afs_benefits",
-    "category": "internationalism",
-    "title": "Benefits of AFS Participation",
-    "content": "AFS helps students develop maturity, global exposure, cross-cultural communication, leadership, and social skills. Through AFS, students learn to appreciate diversity, respect different cultures, and engage meaningfully with peers across the world."
-  },
-  {
-    "key": "afs_dc_role",
-    "category": "internationalism",
-    "title": "Role of Daly College in Promoting AFS",
-    "content": "Daly College actively encourages students to participate in AFS programmes as a way to enhance global thinking and personal growth. The school hosts international delegates, arranges cultural events, and provides platforms for students to share their international experiences with peers."
-  },
-  {
-    "key": "global_initiatives",
-    "category": "internationalism",
-    "title": "Global Initiatives at Daly College",
-    "content": "The school regularly engages in global collaboration through Model United Nations, international conferences, debate forums, online joint learning sessions, global student summits, and cross-border classroom activities. These initiatives help students develop confidence, perspective, and leadership."
-  },
-  {
-    "key": "culture_exchange",
-    "category": "internationalism",
-    "title": "Cultural Exchange Programmes",
-    "content": "Cultural exchanges allow students to understand traditions, festivals, values, and lifestyles from around the world. Daly College hosts and sends student delegations for immersive cultural learning, strengthening international bonds."
-  },
-  {
-    "key": "values_character",
-    "category": "identity",
-    "title": "Values and Character Development",
-    "content": "Daly College places high emphasis on integrity, respect, empathy, discipline, and responsibility. Students learn to uphold ethics in decision-making, participate in community service, engage in teamwork, and develop resilience through various life skills programmes."
-  },
-  {
-    "key": "student_leadership",
-    "category": "leadership",
-    "title": "Student Leadership Framework",
-    "content": "The school nurtures leadership through prefectships, house captaincies, event coordination, team-based activities, student-led initiatives, and representation in various school councils. Students are encouraged to lead with responsibility, confidence, and empathy."
-  },
-  {
-    "key": "house_system_overview",
-    "category": "houses",
-    "title": "House System Overview",
-    "content": "The Daly College House System is central to student life, promoting teamwork, leadership, discipline, and camaraderie. Students are assigned to houses upon admission and remain members throughout their school journey. Houses compete in sports, academics, cultural activities, arts, leadership events, and discipline points to earn the annual House Trophy."
-  },
-  {
-    "key": "boys_houses",
-    "category": "houses",
-    "title": "Boys’ Houses",
-    "content": "The Boys’ House System includes iconic houses inspired by India’s royal and cultural heritage. Each house promotes excellence, unity, sportsmanship, and healthy competition. The boys’ houses include:\n\n• Gwalior House – Symbolizes courage and honour.\n• Indore House – Embodies leadership and responsibility.\n• Bharatpur House – Represents resilience and service.\n• Jodhpur House – Known for discipline, teamwork, and integrity.\n• Jaipur House – Associated with tradition, strength, and excellence.\n• Jammu & Kashmir House – Reflects harmony, peace, and unity."
-  },
-  {
-    "key": "girls_houses",
-    "category": "houses",
-    "title": "Girls’ Houses",
-    "content": "The Girls’ House System instills empowerment, creativity, and leadership. Each house provides an environment for collaboration, responsibility, and confidence-building. The girls’ houses include:\n\n• Scindia House – Grace, leadership, and academic strength.\n• Daly House – Empathy, resilience, and compassion.\n• Tagore House – Creativity, artistic talent, and wisdom.\n• Rani Laxmi Bai House – Courage, determination, and self-confidence."
-  },
-  {
-    "key": "house_competitions",
-    "category": "houses",
-    "title": "House Competitions and Events",
-    "content": "Throughout the year, students participate in house-based competitions, including:\n\n• Inter-house sports tournaments\n• Athletics and track events\n• Cultural activities (dance, music, drama)\n• Art competitions\n• Debates, declamation, and elocution\n• Quiz contests\n• Literary events\n• Community service activities\n\nThese inter-house events strengthen teamwork, leadership, and a sense of belonging."
-  },
-  {
-    "key": "pastoral_system",
-    "category": "pastoral",
-    "title": "Pastoral Care at Daly College",
-    "content": "Pastoral care forms the foundation of emotional and social wellbeing at Daly College. Students receive support from tutors, counsellors, housemasters, housemistresses, wardens, and trained staff. The pastoral care system ensures safety, guidance, empathy, and personal development."
-  },
-  {
-    "key": "hostels_overview",
-    "category": "pastoral",
-    "title": "Hostels and Boarding Life",
-    "content": "Daly College provides secure, structured, and nurturing boarding houses for boys and girls. Each hostel includes dormitories, study rooms, recreation areas, dining facilities, and supervised living.\n\nBoarding teaches:\n• Independence\n• Responsibility\n• Time management\n• Social skills\n• Team spirit\n• Cultural awareness"
-  },
-  {
-    "key": "boarding_facilities",
-    "category": "pastoral",
-    "title": "Boarding Facilities",
-    "content": "Boarding facilities include furnished dormitories, study desks, common lounges, secure premises, laundry services, medical assistance, and nutritious meals. Wardens and matrons supervise daily routines, support emotional needs, and maintain discipline."
-  },
-  {
-    "key": "counselling_services",
-    "category": "pastoral",
-    "title": "Counselling and Wellness Centre",
-    "content": "Daly College offers professional counselling for emotional wellbeing, stress management, academic concerns, and personal development. Wellness initiatives include:\n• Mental health workshops\n• Peer bonding activities\n• Anti-bullying campaigns\n• Career guidance\n• University counselling\n\nThe system ensures that every student feels supported and empowered."
-  },
-  {
-    "key": "co_curricular_overview",
-    "category": "activities",
-    "title": "Co-curricular and Extra-curricular Activities",
-    "content": "Daly College offers extensive co-curricular opportunities to foster creativity, confidence, discipline, and holistic growth. Activities include:\n• Music\n• Dance\n• Theatre\n• Arts & craft\n• Debating\n• MUN\n• Robotics\n• Coding & technology\n• Photography\n• Creative writing\n• Public speaking"
-  },
-  {
-    "key": "clubs_and_societies",
-    "category": "activities",
-    "title": "Clubs and Societies",
-    "content": "The school provides numerous clubs for students to explore their interests and develop leadership skills. Popular clubs include:\n• Literary Club\n• Environment Club\n• Science Club\n• Robotics Club\n• Heritage Club\n• Mathematics Club\n• Art Society\n• Music & Dance Clubs\n• Drama Society\n• Photography Club\n• Coding Club\n• Debate & MUN Society\n• Social Service League"
-  },
-  {
-    "key": "cultural_life",
-    "category": "activities",
-    "title": "Cultural Life at Daly College",
-    "content": "Cultural activities strengthen creativity and confidence. Students participate in:\n• Annual Day performances\n• Founder's Day celebrations\n• Art exhibitions\n• Music concerts\n• Dance festivals\n• School plays and theatre productions\n\nCultural life connects students with tradition, creativity, and expression."
-  },
-  {
-    "key": "student_life_overview",
-    "category": "student_life",
-    "title": "Student Life at Daly College",
-    "content": "Student life at Daly College is a blend of academic excellence, sports, cultural activities, leadership opportunities, and community bonding. The school encourages students to grow through experiences, teamwork, challenges, and celebrations."
-  },
-  {
-    "key": "daily_routine",
-    "category": "student_life",
-    "title": "Daily Routine",
-    "content": "A typical Daly College day includes:\n• Morning assembly\n• Academic classes\n• Lunch break\n• Afternoon sessions\n• Sports & games\n• Clubs and co-curriculars\n• Prep time for boarders\n\nThe routine ensures discipline, balance, and holistic development."
-  },
-  {
-    "key": "school_discipline",
-    "category": "student_life",
-    "title": "Discipline and Conduct",
-    "content": "Discipline is central to Daly College ethos. Students are guided to maintain punctuality, honesty, courtesy, and respect. The discipline system encourages responsibility, accountability, and self-control."
-  },
-  {
-    "key": "senior_appointments",
-    "category": "staff",
-    "title": "Senior Appointments",
-    "content": "• Dr. (Ms) Gunmeet Bindra – Principal | M.A., M.Ed., Ph.D. (Gold Medalist)\n• Mr. Soumen Sinhababu – Vice Principal | M.A., B.Ed.\n• Mr. Harshvardhan Singh – Bursar | HM, IFTB, M.A.(MTM)\n• Mrs. Rashmi Ahuja – Head Mistress, Jr. School | B.A., B.Ed.\n• Mrs. Asma Ansari – Sr. Dean Academics | M.A., B.Ed.\n• Nanki Manocha – Exam Officer (Cambridge Curriculum), Head Boarding Houses, HOD English Jr. School | BA English & Psychology, B.Ed.\n• Mr. Ashok Kumar Singh – Dy Dean Discipline | MBA(HRD), M.Com., M.A.(Eco.), M.A.(Pub.Admn.), M.A.(Sociology), M.A.(Psychology), B.Ed.\n• Dr. (Mrs.) Shampa Majumdar – Deputy Dean Day Boarding | M.A., B.Ed., Ph.D.\n• Mr. Prashant Kumar Tripathi – Dy Dean Pastoral Care (Boarding) | M.A., B.Ed.\n• Mrs. Shilpa Virmani – Dy Dean Middle School | M.A (Eco & English), B.Ed.\n• Mrs. Kanak Bali Singh – Dy Dean Co-Curricular Activities | B.A., B.Ed."
-  },
-  {
-    "key": "biology_department",
-    "category": "staff",
-    "title": "Biology Department",
-    "content": "• Mr. Waseem Ahmad – Senior Teacher | M.Sc., B.Ed. (NCERT Integrated)\n• Ms. Ritu Bhate – Senior Teacher | M.Sc.(Zoology), M.A.(Eng. Lit.), B.Ed.\n• Md Idul Ali – Senior Teacher | M.Sc., B.Ed."
-  },
-  {
-    "key": "chemistry_department",
-    "category": "staff",
-    "title": "Chemistry Department",
-    "content": "• Mr. Avinash Moyde – HOD Chemistry | M.Sc., M.Ed.\n• Mrs. Kirti Jain – Senior Teacher | M.Sc.(Inorganic Chemistry), B.Ed.\n• Mrs. Madhuri Moyde – Senior Teacher | M.Sc., M.Ed.\n• Mr. Ravindra Bhawnani – Senior Teacher | M.Sc.(Industrial Chem), M.Sc.(Physical Chem), B.Ed.\n• Mr. Bibhav Dwivedi – Senior Teacher | M.Sc. Chemistry"
-  },
-  {
-    "key": "commerce_department",
-    "category": "staff",
-    "title": "Commerce Department",
-    "content": "• Mr. Ashok Kumar Singh – Dy Dean Discipline | MBA(HRD), M.Com., M.A.(Eco.), M.A.(Pub.Admn.), M.A.(Sociology), M.A.(Psychology), B.Ed.\n• Mr. Siddharth Tiwari – Senior Teacher | M.Com., B.Ed., Diploma in Management\n• Mr. Yogesh Fasatey – Senior Teacher | M.Com., M.Phil., B.Ed.\n• Mr. Vinod Kumar Dawar – Senior Teacher | PG (Taxation), B.Ed.\n• Mr. Kriti Sundar Biswas – Senior Teacher | M.Com.(Taxation), B.Ed., LLB(Hons)\n• Mr. Amit Verma – Senior Teacher | M.Com., B.Ed., M.A.(Eng.)"
-  },
-  {
-    "key": "computer_science_department",
-    "category": "staff",
-    "title": "Computer Science Department",
-    "content": "• Mr. Rajesh Nandwal – HOD Computer Science | M.Sc., M.C.M.\n• Mrs. Bhawna Bhatnagar – Senior Teacher | M.C.M., E2Com.\n• Mr. Chetan Sharma – Senior Teacher | B.Sc., M.C.M., B.Ed.\n• Mr. Sameer Wilson – Senior Teacher | B.E. (Computer Science & Engineering)\n• Mr. Rajneesh Kumar Sharma – Senior Teacher | M.Sc.\n• Mr. Alok Kanoongo – Senior Teacher | B.Sc., B.Ed., M.C.A., M.Sc.(Electronics & Communication)"
-  },
-  {
-    "key": "economics_department",
-    "category": "staff",
-    "title": "Economics Department",
-    "content": "• Mrs. Asma Ansari – Sr. Dean Academics | M.A., B.Ed.\n• Mr. Rajesh Kumar Ojha – HOD Economics | M.A.(Eco & Sociology), B.Ed.\n• Dr. Yogeshwar Shukla – Senior Teacher | M.A., Ph.D., B.Ed., PGDCSA, UGC-NET\n• Ms. Sabiya Naaz – Senior Teacher | M.A.(Economics), B.Ed.\n• Mrs. Mousumi Sinhababu – Coordinator Cambridge Curriculum | M.A., B.Ed."
-  },
-  {
-    "key": "english_department",
-    "category": "staff",
-    "title": "English Department",
-    "content": "• Dr. (Mrs.) Shampa Majumdar – Dy Dean Pastoral (Senior Boarding) | M.A., Ph.D., B.Ed.\n• Mrs. Shilpa Virmani – Dy Dean Day Boarding | M.A (Eco & English), B.Ed.\n• Mrs. Aditi Ghatak – HOD English | M.A., B.Ed.\n• Mr. Sijo Mathew – Senior Teacher | M.A., M.Phil., B.Ed., M.Ed.\n• Mrs. Anamika Ojha – Senior Teacher | M.A.(Eng.), M.Phil.(Eng.), B.Ed.\n• Mr. Arindam Chattopadhyay – Senior Teacher | M.A.(English), B.Ed.\n• Mrs. Shweta Verma – Senior Teacher | M.A., B.Ed.\n• Dr. Pooja Jain – Coordinator Pastoral (Boarding) | B.Sc., M.A., Ph.D."
-  },
-  {
-    "key": "geography_department",
-    "category": "staff",
-    "title": "Geography Department",
-    "content": "• Mrs. Richa Chitale – Head of Geography | M.A., B.Ed., LLB\n• Dr. Anshu D’souza – Senior Teacher | B.A., M.A.(English Lit), M.A.(Geography), B.Ed., Ph.D.(Geography)\n• Mr. Gaurav Singh Rathore – Senior Teacher | B.A.(Hons Geo), M.A., NET"
-  },
-  {
-    "key": "hindi_department",
-    "category": "staff",
-    "title": "Hindi Department",
-    "content": "• Mr. Utpal Banerjee – Coordinator Class VII & HOD Hindi | M.A., B.Ed.\n• Dr. (Mrs.) Mudita Pachauri – Senior Teacher | M.A., B.Ed., Ph.D.\n• Mrs. Apoorva Banerjee – Senior Teacher | M.A., M.Phil., B.Ed.\n• Mr. Prashant Kumar Tripathi – Dy Dean Pastoral Care (Boarding) | M.A., B.Ed.\n• Mr. Brijesh Bhatore – Senior Teacher | M.A.(Hindi & Sanskrit), M.Phil., M.Ed."
-  },
-  {
-    "key": "history_department",
-    "category": "staff",
-    "title": "History Department",
-    "content": "• Mrs. Seema Chadha – Coordinator Class VIII | M.A., B.Ed.\n• Mrs. Kanak Bali Singh – Dy Dean Co-Curricular | B.A., B.Ed.\n• Mr. Kunwar Singh Rawat – Senior Teacher | M.A., B.Ed.\n• Mr. Tushar Guha – Senior Teacher | M.A.(History), M.A.(English Lit), B.Ed.\n• Mr. Chandan Kumar Singh – TGT Social Science | PGDSLM, M.A.(History), B.Ed.\n• Mr. Harminder Singh – Academic Teacher | M.A.(History), Master of Physical Education, B.Ed., NIS Certified"
-  },
-  {
-    "key": "mathematics_department",
-    "category": "staff",
-    "title": "Mathematics Department",
-    "content": "• Mr. Naresh Verma – HOD Maths | M.Sc., B.Ed.\n• Mr. Vijay Thatte – Senior Teacher | M.Sc., B.Ed.\n• Mr. Rakesh Kumar Jain – Senior Teacher | M.Sc., B.Ed.\n• Mr. Rajesh Dubey – Senior Teacher | M.Sc., B.Ed."
-  },
-  {
-    "key": "physics_department",
-    "category": "staff",
-    "title": "Physics Department",
-    "content": "• Mr. Rakesh Nagpal – HOD Physics | M.Sc., B.Ed.\n• Mr. Sharad Mishra – Senior Teacher | M.Sc., LLB, B.Ed.\n• Mr. Ashish Jain – Senior Teacher | M.Sc., B.Ed.\n• Mr. Sandeep Yeole – Senior Teacher | M.Phil.(Physics), M.Sc.(Electronics & Telecom), B.Ed.\n• Mrs. Ishmeet Singh – Senior Teacher | M.Sc.(Physics), B.Ed."
-  },
-  {
-    "key": "other_departments",
-    "category": "staff",
-    "title": "Other Departments (Dance, Arts, French, PE, Music, Psychology)",
-    "content": "• Mrs. Mridulika Agrawal – Student Counsellor | M.A.(Clinical Psychology), PG Counselling & Guidance\n• Mrs. Noopur Dube – Dance | M.A. Dance (Kathak), B.Ed.\n• Mrs. Priyanka Dave – Fine Arts | B.F.A., M.A.(History of Indian Art & Culture), B.Ed.\n• Ms. Arpita Dasgupta – Fine Arts | B.Fine (Graphics)\n• Mrs. Sarita Gangwani – French | B.Com., Diploma in French, B.Ed., M.Ed.\n• Mr. Yogendra Deshpande – Physical Education | M.P.Ed.\n• Mrs. Tanisha Behrani – French | B.Com., Diploma in French, B.Ed.\n• Mr. Dharmendra Yadav – Physical Education | BPEd, MPEd, Khelo India Master Trainer, AIFF Licence Coach\n• Mr. Rajendra Nagle – Vocal Music | B.Mus.\n• Ms. Deepika Tiwari – Psychology | Masters in Clinical Psychology, B.Ed."
-  },
-  {
-    "key": "additional_senior_teachers",
-    "category": "staff",
-    "title": "Additional Senior Teachers",
-    "content": "• Mr. Benedict John – Senior Teacher | M.Sc., B.Ed.\n• Mr. Madhup Kumar Pandey – Senior Teacher | M.Sc., B.Ed.\n• Ms. Archana Poore – Senior Teacher | M.Sc.(Statistics), B.Ed., Diploma in Guidance & Counselling\n• Mr. Pushkal Chaudhary – Senior Teacher | B.Tech (Electronics & Communication Engineering)"
+
+  "total_boarding_buildings": 5,
+
+  "study_blocks": [
+    "New Block",
+    "Holkar Block",
+    "Computer Science Block",
+    "Science Block"
+  ],
+
+  "heads_of_departments": [
+    { "department": "Chemistry", "head": "Mr. Avinash Moyde" },
+    { "department": "English", "head": "Mrs. Aditi Ghatak" },
+    { "department": "Computer Science", "head": "Mr. Rajesh Nandwal" },
+    { "department": "Biology", "head": "Mr. Waseem Ahmed" },
+    { "department": "Physics", "head": "Mr. Rakesh Nagpal" },
+    { "department": "History", "head": "Mrs. Seema Chadha" },
+    { "department": "Geography", "head": "Mrs. Richa Chitale" },
+    { "department": "Mathematics", "head": "Mr. Naresh Verma" },
+    { "department": "Hindi", "head": "Mr. Uptal Banerjee" },
+    { "department": "Economics", "head": "Mr. Rajesh Kumar Ojha" },
+    { "department": "Commerce", "head": "Mr. Ashok Kumar Singh" }
+  ],
+
+  "deans_and_coordinators": {
+    "sr_dean_academics": "Mrs. Asma Ansari",
+    "dy_deans": [
+      {
+        "role": "Dy Dean CCA",
+        "name": "Mrs. Kanak Bali Singh"
+      },
+      {
+        "role": "Dy Dean Middle School",
+        "name": "Mrs. Shilpa Virmani"
+      },
+      {
+        "role": "Dy Dean Pastoral Care (Boarding)",
+        "name": "Mr. Prashant Kumar Tripathi"
+      },
+      {
+        "role": "Dy Dean Day Boarding",
+        "name": "Dr. (Mrs.) Shampa Majumdar"
+      },
+      {
+        "role": "Dy Dean Discipline",
+        "name": "Mr. Ashok Kumar Singh"
+      }
+    ],
+    "cambridge_coordinator": "Mrs. Mousumi Sinhababu"
   }
-]
+}
