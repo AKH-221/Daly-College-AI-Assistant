@@ -12,6 +12,8 @@ dotenv.config();
 // Load Daly College data (JSON)
 // -----------------------------
 const dalyDataPath = path.join(__dirname, "..", "Dalydata.json");
+console.log("ℹ️ Looking for Dalydata.json at:", dalyDataPath);
+
 let dalyData: any = {};
 
 try {
