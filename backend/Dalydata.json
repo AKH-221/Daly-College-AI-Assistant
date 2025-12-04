@@ -366,7 +366,7 @@
       "key": "geography_department",
       "category": "staff",
       "title": "Geography Department",
-      "content": "• Mrs. Richa Chitale – Head of Geography | M.A., B.Ed., LLB\n• Dr. Anshu D’souza – Senior Teacher | B.A., M.A.(English Lit), M.A.(Geography), B.Ed., Ph.D.(Geography)\n• Mr. Gaurav Singh Rathore – Senior Teacher | B.A.(Hons Geo), M.A., NET"
+      "content": "• Mrs. Richa Chitale – Head of Geography | M.A., B.Ed., LLB\n• Dr. Anshu D’souza – Senior Teacher | B.A., M.A.(English Lit), M.A.(Geography), B.Ed., Ph.D.(Geography)\n• Mr. Gaurav Singh Rathore – Senior Teacher | B.A.(Hons Geo), M.A., NET.\n• Mrs. Malvika Pande - Senior Teacher | Geography Teacher"
     },
     {
       "key": "hindi_department",
@@ -3837,4 +3837,26 @@
     "role": "Official Website Creator / Developer",
     "description": "Creator of the Daly College AI-powered website, contributing to design, structure, and digital development."
   }
+}
+{
+  "key": "education_world_ivy_league_award_2025",
+  "category": "awards",
+  "title": "Education World Ivy League Day-cum-Boarding School Award 2025",
+  "year": 2025,
+  "awarded_by": "Education World",
+  "description": "Daly College has been honoured as the first 5-Star School in the Ivy League Day-cum-Boarding Schools category for the year 2025.",
+  "ranking_url": "https://educationworld.in/rankings-school-ivy-league-day-cum-boarding-school/",
+  "highlights": [
+    "First-ever 5-Star rating in Ivy League Day-cum-Boarding Schools – 2025",
+    "Recognised for excellence in academics, co-curricular activities, and holistic development",
+    "Awarded by Education World, India's leading school ranking platform"
+  ]
+}
+{
+  "key": "staff_shashank_jain",
+  "category": "staff",
+  "department": "Photography Department",
+  "name": "Mr. Shashank Jain",
+  "role": "Photographer, Daly College",
+  "description": "Mr. Shashank Jain serves as the official Photographer of Daly College, contributing to the Photography Department with his expertise in capturing school events, activities, and campus life."
 }
