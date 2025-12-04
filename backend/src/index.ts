@@ -1,148 +1,25 @@
 // backend/src/index.ts
-
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import fs from "fs";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
 // -----------------------------
-// Basic Express setup
+// Load Daly College data (JSON)
 // -----------------------------
-const app = express();
-
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.FRONTEND_URL || "",
-    ].filter(Boolean),
-    credentials: true,
-  })
-);
-
-app.use(express.json());
-
-const PORT = process.env.PORT || 8080;
-
-// -----------------------------
-// Load Dalydata.json (DO NOT TOUCH DATA)
-// -----------------------------
-const DATA_PATH = path.join(__dirname, "..", "Dalydata.json");
-
-let dalyData: any = null;
-let dalyFlatChunks: string[] = [];
+const dalyDataPath = path.join(__dirname, "..", "Dalydata.json");
+let dalyData: any = {};
 
 try {
-  const raw = fs.readFileSync(DATA_PATH, "utf8");
-  // assuming Dalydata.json is valid JSON in your project
+  const raw = fs.readFileSync(dalyDataPath, "utf-8");
   dalyData = JSON.parse(raw);
-  console.log("✅ Dalydata.json loaded successfully");
+  console.log("✅ Loaded Dalydata.json successfully");
 } catch (err) {
-  console.error("❌ Error loading/parsing Dalydata.json:", err);
-  // If parsing fails, we still keep raw text as one big chunk
-  try {
-    const raw = fs.readFileSync(DATA_PATH, "utf8");
-    dalyData = raw;
-    console.log("⚠️ Using Dalydata.json as raw text only");
-  } catch (e2) {
-    console.error("❌ Could not even read Dalydata.json as text:", e2);
-  }
-}
-
-// -----------------------------
-// Helper: Flatten Daly data into text chunks for search
-// -----------------------------
-function collectTextChunks(node: any, prefix = ""): string[] {
-  const chunks: string[] = [];
-
-  // primitive values -> add as text
-  if (
-    node === null ||
-    node === undefined ||
-    typeof node === "number" ||
-    typeof node === "boolean" ||
-    typeof node === "string"
-  ) {
-    const text = String(node).trim();
-    if (text.length > 0) {
-      chunks.push(text);
-    }
-    return chunks;
-  }
-
-  // arrays
-  if (Array.isArray(node)) {
-    for (const item of node) {
-      chunks.push(...collectTextChunks(item, prefix));
-    }
-    return chunks;
-  }
-
-  // objects
-  if (typeof node === "object") {
-    for (const [key, value] of Object.entries(node)) {
-      const newPrefix = prefix ? `${prefix} > ${key}` : key;
-      const subChunks = collectTextChunks(value, newPrefix);
-      for (const c of subChunks) {
-        chunks.push(`${newPrefix}: ${c}`);
-      }
-    }
-    return chunks;
-  }
-
-  return chunks;
-}
-
-// Build flat chunks once if JSON parsed successfully
-if (dalyData && typeof dalyData === "object") {
-  dalyFlatChunks = collectTextChunks(dalyData);
-  console.log(`📚 Dalydata flattened into ${dalyFlatChunks.length} chunks`);
-} else if (typeof dalyData === "string") {
-  // raw text fallback
-  dalyFlatChunks = [dalyData];
-}
-
-// -----------------------------
-// Very simple keyword search over chunks
-// -----------------------------
-function getContextForQuery(query: string, maxChunks = 20): string {
-  if (!dalyFlatChunks.length) return "";
-
-  const q = query.toLowerCase();
-  const qWords = Array.from(
-    new Set(
-      q
-        .split(/[^a-z0-9]+/i)
-        .map((w) => w.trim())
-        .filter(Boolean)
-    )
-  );
-
-  type Scored = { score: number; text: string };
-
-  const scored: Scored[] = [];
-
-  for (const chunk of dalyFlatChunks) {
-    const lower = chunk.toLowerCase();
-    let score = 0;
-    for (const w of qWords) {
-      if (w.length < 2) continue;
-      if (lower.includes(w)) score += 1;
-    }
-    if (score > 0) {
-      scored.push({ score, text: chunk });
-    }
-  }
-
-  scored.sort((a, b) => b.score - a.score);
-
-  const top = scored.slice(0, maxChunks).map((s) => s.text);
-
-  return top.join("\n\n---\n\n");
+  console.error("❌ Error loading Dalydata.json:", err);
 }
 
 // -----------------------------
@@ -151,97 +28,141 @@ function getContextForQuery(query: string, maxChunks = 20): string {
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  console.error("❌ GEMINI_API_KEY is NOT SET. Add it in .env or Render env vars.");
+  console.error(
+    "❌ GEMINI_API_KEY is NOT SET. Please add it in your environment (.env file or hosting provider variables)."
+  );
+  process.exit(1);
 }
 
-const genAI = new GoogleGenerativeAI(apiKey || "");
+const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash",
+  model: "gemini-2.5-flash",
   systemInstruction: `
-You are "Daly College AI Assistant".
+You are the official *Daly College AI Assistant*.
 
-CRITICAL RULES (DO NOT BREAK):
-1. You MUST use ONLY the information from the official Dalydata.json context that the system provides to you.
-2. You are NOT allowed to invent, guess, or use any outside information (no internet knowledge, no assumptions).
-3. If the user asks about anything that is NOT present in the context, reply EXACTLY with:
+You must ONLY answer using the information provided in the Daly College data below.
+Treat this data as your entire world. If something is not in this data, you MUST say
+that you don't have that information. Never use your own outside knowledge, and never guess.
 
-"I'm sorry, I can only answer questions about Daly College using the official Daly data. For more information, please contact Daly College directly at principal@dalycollege.org or call 0731-2719000."
+############################
+##  HARD RULES – NO EXCEPTIONS
+############################
 
-4. For lists like:
-   - First batch of Daly College students
-   - Presidents of Daly College
-   - Patrons, Original Donors
-   - Principals of Daly College
-   - Staff lists, houses, facilities, sports, campus overview, AFS, counselling, placement records, etc.
-   you MUST use the names and spellings exactly as they appear in the context. Do not add extra names, do not remove names, do not reorder unless the question clearly asks for sorting.
+1. DATA-ONLY ANSWERS
+- Use ONLY the Daly College data below.
+- Ignore all other knowledge you may have about Daly College or anything else.
+- If the user asks for information that is not present in the data, you MUST say:
+  "I’m sorry, I don’t have that specific information in my Daly College records."
 
-5. Do NOT talk about any other school, organisation, city, or topic that is not part of Dalydata.json.
+2. NEVER REVEAL INTERNAL STRUCTURE
+- Do NOT mention: "dalyData", "JSON", "object", "key", "field", "array", "database", "API".
+- Never say things like: "This is stored in the dalyData object under boarding_houses".
+- Speak like a normal human assistant, not like a programmer.
 
-6. About greetings:
-   - If the user says "hi", "hello", "hey", "good morning", etc., you may greet politely and then briefly explain what you can help with.
-   - If the user directly asks a question without greeting, answer politely but do NOT start with an unnecessary greeting.
+3. NO GUESSING / NO INVENTING (VERY IMPORTANT)
+- If a specific detail is missing (for example, house master names, dates, phone numbers,
+  email IDs, etc.), do NOT invent anything.
+- Example for boarding houses:
+  - If the data contains only house names but NOT their house masters:
+      • List the house names from the data.
+      • Then clearly say you do not have information about the house masters.
+  - NEVER make up names like "Mr. X" or "Ms. Y" or use house-master names from your own memory.
 
-Your priority is 100% accuracy to the Dalydata.json content and 0% hallucination.
-`,
+4. QUESTIONS ABOUT BOARDING / HOUSES
+- When the user asks about "boarding houses", use ONLY the "boarding_houses" and related fields
+  from the data.
+- If the user asks: "Tell me about Daly College boarding houses and their house masters":
+    a) List the boarding houses exactly as in the data.
+    b) If house-masters are NOT provided in the data, say:
+       "The data I have includes the names and types of the boarding houses, but it does not list the house masters."
+- NEVER introduce any boarding house or staff name that is not explicitly in the data.
+
+5. SCOPE LIMIT
+- Only answer questions related to Daly College, such as:
+  • Campus, facilities, temple, mosque, mess, infirmary, Durbar Hall
+  • History, evolution, founder, original donors
+  • Presidents, patrons, principals, first batch
+  • Staff, faculty, administrative staff, cultural activities staff, sports staff
+  • Boarding houses, day-boarding houses, study blocks, academic programmes, sports, etc.
+- If the user asks about something NOT related to Daly College (example: Dubai Mall, another school, general world questions):
+  - Reply politely that you can only answer about Daly College, Indore.
+  - Example:
+    "I can only answer questions related to Daly College, Indore. For other queries, please refer to appropriate sources or contact Daly College directly."
+
+6. MISSING OR PARTIAL INFORMATION
+- If information is clearly missing or incomplete in the data:
+  • Do NOT try to fill gaps with imagination.
+  • Instead, clearly say which part you don’t know.
+  • Example:
+    "I have the list of principals of Daly College, but I don’t have their detailed biographies in my records."
+
+7. GREETING BEHAVIOUR
+- If the user greets (hi, hello, hey, good morning, etc.):
+  • Respond with a warm, short greeting and explain briefly what you can do.
+  • Example:
+    "Hello! I am the Daly College AI Assistant. I can help you with information about Daly College’s history, campus, facilities, staff, boarding houses and more. How can I help you today?"
+- If they greet again later, you can respond simply ("Hello again!") without repeating a long intro.
+
+8. TONE
+- Be polite, clear, and helpful.
+- Write in simple English unless the user asks for something else.
+- Keep answers focused; do not explain how you work internally.
+
+############################
+##  DALY COLLEGE DATA
+############################
+
+Use ONLY the following data to answer all questions:
+
+${JSON.stringify(dalyData)}
+  `,
 });
 
 // -----------------------------
-// Routes
+// Express app setup
 // -----------------------------
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+app.use(cors());
+app.use(express.json());
+
+// Health check
 app.get("/", (_req: Request, res: Response) => {
   res.send("Daly College AI Assistant backend is running ✅");
 });
 
+// -----------------------------
+// Chat endpoint
+// -----------------------------
 app.post("/api/chat", async (req: Request, res: Response) => {
   try {
-    const message = req.body.message;
+    const message = req.body.message as string;
 
     if (!message || typeof message !== "string") {
-      return res.status(400).json({ error: "Missing or invalid 'message' field" });
+      return res.status(400).json({ error: "Missing or invalid 'message'" });
     }
-
-    if (!apiKey) {
-      return res.status(500).json({ error: "GEMINI_API_KEY is not configured on the server" });
-    }
-
-    // Get relevant context from Dalydata.json
-    const context = getContextForQuery(message);
-
-    const prompt = `
-You will answer a user question about Daly College using ONLY the official Dalydata.json context.
-
-CONTEXT START
-${context || "(No matching context found for this query)"}
-CONTEXT END
-
-IMPORTANT:
-- If the answer is clearly present in the context, answer briefly but clearly, using the exact names and spellings.
-- If the answer is NOT present or is unclear from the context, you MUST reply with:
-
-"I'm sorry, I can only answer questions about Daly College using the official Daly data. For more information, please contact Daly College directly at principal@dalycollege.org or call 0731-2719000."
-
-User question: ${message}
-`;
 
     const result = await model.generateContent({
       contents: [
         {
           role: "user",
-          parts: [{ text: prompt }],
+          parts: [{ text: message }],
         },
       ],
     });
 
     const reply =
-      (result as any)?.response?.text?.() ||
-      "I'm sorry, I can only answer questions about Daly College using the official Daly data. For more information, please contact Daly College directly at principal@dalycollege.org or call 0731-2719000.";
+      result?.response?.text?.() ||
+      "Sorry, I could not generate a response at this moment.";
 
     return res.json({ reply });
-  } catch (e: any) {
-    console.error("❌ Gemini / server error:", e);
-    return res
-      .status(500)
-      .json({ error: "Gemini API error", details: e?.message || String(e) });
+  } catch (error: any) {
+    console.error("Gemini Error:", error);
+    return res.status(500).json({
+      error: "Gemini API error",
+      details: error?.message || error,
+    });
   }
 });
 

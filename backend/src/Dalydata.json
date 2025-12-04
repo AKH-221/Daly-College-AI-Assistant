@@ -529,9 +529,9 @@
         "name": "Mr. Ashok Kumar Singh"
       }
     ],
-    "cambridge_coordinator": "MrSs. Mousumi Sinhababu"
+    "cambridge_coordinator": "Mrs. Mousumi Sinhababu"
   }
-},
+}
 "campus_overview": {
   "title": "Campus Daly College",
   "campus_size_acres": 118.8,
@@ -3836,15 +3836,5 @@
     "academic_year": "2025–26",
     "role": "Official Website Creator / Developer",
     "description": "Creator of the Daly College AI-powered website, contributing to design, structure, and digital development."
-  }
-}
-{
-  "key": "photography_incharge",
-  "category": "staff_roles",
-  "title": "Photography Department",
-  "person": {
-    "name": "Mr. Shashank Jain",
-    "role": "Photography Incharge",
-    "description": "Responsible for all photography-related activities, visual documentation, and media coverage at Daly College."
   }
 }
