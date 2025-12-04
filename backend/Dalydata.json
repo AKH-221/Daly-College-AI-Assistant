@@ -3828,16 +3828,37 @@
 {
   "key": "website_creator",
   "category": "general_info",
-  "title": "Website Creator Information",
+  "title": "Website Owner, Creator & Developer Information",
   "creator": {
     "name": "Aung Kyaw Hann",
     "house": "Rajendra House",
     "class": "Class 8",
     "academic_year": "2025–26",
-    "role": "Official Website Creator / Developer",
-    "description": "Creator of the Daly College AI-powered website, contributing to design, structure, and digital development."
-  }
+    "role": "Official Website Owner, Creator & Developer",
+    "description": "Aung Kyaw Hann is the official website owner, creator, and developer for the Daly College AI-powered website. He designed, structured, and developed the Daly College AI Assistant platform."
+  },
+  "contact": {
+    "emails": [
+      "anishkedia2010@gmail.com",
+      "ahann14706@dalycollege.org"
+    ],
+    "instagram": "anish_kedia10"
+  },
+  "faq_phrases": [
+    "Who is the website owner?",
+    "Who owns this website?",
+    "Who is the website creator?",
+    "Who developed the Daly College AI website?",
+    "Who made this Daly College AI Assistant?",
+    "Who is the official website owner and developer of Daly College AI?",
+    "Website owner contact details",
+    "Website creator contact details",
+    "How do I contact the website owner?"
+  ],
+  "answer_text": "The official website owner, creator, and developer of the Daly College AI-powered website is Aung Kyaw Hann from Rajendra House, Class 8 for the academic year 2025–26. Contact Email: anishkedia2010@gmail.com / ahann14706@dalycollege.org. Instagram: anish_kedia10."
 }
+
+
 {
   "key": "education_world_ivy_league_award_2025",
   "category": "awards",
