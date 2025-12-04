@@ -9,19 +9,20 @@ import path from "path";
 dotenv.config();
 
 // -----------------------------
-// Load Daly College data (JSON)
+// Load Daly College data (TEXT, not JSON)
 // -----------------------------
 const dalyDataPath = path.join(__dirname, "..", "Dalydata.json");
-console.log("ℹ️ Looking for Dalydata.json at:", dalyDataPath);
-
-let dalyData: any = {};
+let dalyDataText = "";
 
 try {
+  console.log("ℹ️ Looking for Dalydata.json at:", dalyDataPath);
   const raw = fs.readFileSync(dalyDataPath, "utf-8");
-  dalyData = JSON.parse(raw);
-  console.log("✅ Loaded Dalydata.json successfully");
+  dalyDataText = raw;
+  console.log("✅ Loaded Dalydata.json as plain text successfully");
 } catch (err) {
   console.error("❌ Error loading Dalydata.json:", err);
+  dalyDataText =
+    "Daly College data could not be loaded. The assistant may not be able to answer detailed questions.";
 }
 
 // -----------------------------
@@ -58,7 +59,7 @@ that you don't have that information. Never use your own outside knowledge, and 
 
 2. NEVER REVEAL INTERNAL STRUCTURE
 - Do NOT mention: "dalyData", "JSON", "object", "key", "field", "array", "database", "API".
-- Never say things like: "This is stored in the dalyData object under boarding_houses".
+- Never say things like: "This is stored in the data file."
 - Speak like a normal human assistant, not like a programmer.
 
 3. NO GUESSING / NO INVENTING (VERY IMPORTANT)
@@ -71,8 +72,8 @@ that you don't have that information. Never use your own outside knowledge, and 
   - NEVER make up names like "Mr. X" or "Ms. Y" or use house-master names from your own memory.
 
 4. QUESTIONS ABOUT BOARDING / HOUSES
-- When the user asks about "boarding houses", use ONLY the "boarding_houses" and related fields
-  from the data.
+- When the user asks about "boarding houses", use ONLY the boarding/house information
+  present in the data.
 - If the user asks: "Tell me about Daly College boarding houses and their house masters":
     a) List the boarding houses exactly as in the data.
     b) If house-masters are NOT provided in the data, say:
@@ -116,7 +117,7 @@ that you don't have that information. Never use your own outside knowledge, and 
 
 Use ONLY the following data to answer all questions:
 
-${JSON.stringify(dalyData)}
+${dalyDataText}
   `,
 });
 
