@@ -148,7 +148,7 @@ How can I assist you today?`,
 
         {/* ✅ Correct developer credit */}
         <p className="text-center text-xs text-slate-500 mt-3">
-          Daly College AI Assistant — Developed by Dipakshi Kedia.
+          Daly College AI Assistant — Developed by Aung Kyaw Hann, Year 2025-26.
         </p>
       </footer>
     </div>
