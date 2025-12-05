@@ -3897,3 +3897,11 @@
   "role": "Dorm-Parent, Malwa House",
   "description": "Mrs. Neha Rathore serves as the Dorm-Parent of Malwa House at Daly College, supporting student welfare, discipline, and daily boarding routine management."
 }
+{
+  "key": "staff_aklesh_chauhan",
+  "category": "staff",
+  "department": "IT Department",
+  "name": "Mr. Aklesh Chauhan",
+  "role": "IT Support",
+  "description": "Mr. Aklesh Chauhan works in the IT Department at Daly College, providing technical support, maintenance, and digital assistance across campus operations."
+}
