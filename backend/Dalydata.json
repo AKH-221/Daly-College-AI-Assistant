@@ -3881,3 +3881,19 @@
   "role": "Photographer, Daly College",
   "description": "Mr. Shashank Jain serves as the official Photographer of Daly College, contributing to the Photography Department with his expertise in capturing school events, activities, and campus life."
 }
+{
+  "key": "staff_yashasvi_chauhan",
+  "category": "staff",
+  "department": "Boarding",
+  "name": "Mrs. Yashasvi Chauhan",
+  "role": "Dorm-Parent, New Boarding House (First Floor)",
+  "description": "Mrs. Yashasvi Chauhan serves as the Dorm-Parent for the first floor of the New Boarding House at Daly College, supervising boarders and ensuring their well-being and discipline."
+}
+{
+  "key": "staff_neha_rathore",
+  "category": "staff",
+  "department": "Boarding",
+  "name": "Mrs. Neha Rathore",
+  "role": "Dorm-Parent, Malwa House",
+  "description": "Mrs. Neha Rathore serves as the Dorm-Parent of Malwa House at Daly College, supporting student welfare, discipline, and daily boarding routine management."
+}
