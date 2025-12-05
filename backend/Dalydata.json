@@ -3905,3 +3905,14 @@
   "role": "IT Support",
   "description": "Mr. Aklesh Chauhan works in the IT Department at Daly College, providing technical support, maintenance, and digital assistance across campus operations."
 }
+{
+  "key": "annual_exhibition_2025_chief_guest",
+  "category": "events",
+  "title": "2025 Annual Exhibition Chief Guest",
+  "person": {
+    "name": "Dr. Divya Gupta",
+    "designation": "Honourable Chief Guest",
+    "event": "Annual Exhibition 2025",
+    "description": "Dr. Divya Gupta is the Honourable Chief Guest for Daly College's Annual Exhibition 2025."
+  }
+}
