@@ -5,9 +5,10 @@ import dcLogo from '../assets/logo1.png'; // ✅ Daly College logo
 
 interface ChatMessageProps {
   message: Message;
+  index: number;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, index }) => {
   const isUser = message.role === 'user';
   const messageText = message.parts[0].text;
   const groundingChunks =
@@ -20,7 +21,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   );
 
   const ModelIcon = () => (
-    <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center">
+    <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center assistant-avatar-pulse">
       <img
         src={dcLogo}
         alt="Daly College Logo"
@@ -30,7 +31,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   );
 
   return (
-    <div className={`flex items-start gap-3 ${isUser ? 'justify-end' : ''}`}>
+    <div
+      className={`message-enter flex items-start gap-3 ${isUser ? 'justify-end' : ''}`}
+      style={{ animationDelay: `${Math.min(index * 70, 350)}ms` }}
+    >
       {!isUser && <ModelIcon />}
       <div className="flex flex-col gap-2">
         <div
