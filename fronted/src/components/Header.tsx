@@ -6,7 +6,7 @@ const Header: React.FC = () => {
     <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 shadow-sm sticky top-0 z-10">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-blue-700 flex items-center justify-center">
+          <div className="header-logo w-10 h-10 rounded-full overflow-hidden bg-blue-700 flex items-center justify-center">
             <img
               src={dcLogo}
               alt="Daly College Logo"
@@ -21,6 +21,10 @@ const Header: React.FC = () => {
               Gyanamev Shakti (Knowledge itself is Power)
             </p>
           </div>
+        </div>
+        <div className="hidden sm:flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
+          <span className="status-dot" aria-hidden="true" />
+          <span>Ready to help</span>
         </div>
       </div>
     </header>

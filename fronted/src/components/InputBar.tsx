@@ -17,7 +17,7 @@ const InputBar: React.FC<InputBarProps> = ({ value, onChange, onSend, isLoading 
   };
 
   return (
-    <div className="max-w-4xl mx-auto flex items-center gap-2">
+    <div className="input-shell max-w-4xl mx-auto flex items-center gap-2">
       <input
         type="text"
         value={value}
@@ -30,7 +30,7 @@ const InputBar: React.FC<InputBarProps> = ({ value, onChange, onSend, isLoading 
       <button
         onClick={onSend}
         disabled={isLoading || !value.trim()}
-        className="w-10 h-10 flex items-center justify-center bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
+        className="send-button w-10 h-10 flex items-center justify-center bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? <LoadingIcon /> : <SendIcon />}
       </button>

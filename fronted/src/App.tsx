@@ -99,17 +99,19 @@ How can I assist you today?`,
   ];
 
   return (
-    <div className="bg-slate-100 dark:bg-slate-900 font-sans h-screen w-screen flex flex-col">
+    <div className="app-shell bg-slate-100 dark:bg-slate-900 font-sans h-screen w-screen flex flex-col">
       <Header />
 
       <main
         ref={scrollContainerRef}
-        className="relative flex-1 overflow-y-auto p-4 md:p-6"
+        className="app-main relative flex-1 overflow-y-auto p-4 md:p-6"
       >
 
         {/* Welcome Section */}
         {showQuickPrompts && (
-          <section className="flex flex-col items-center text-center mt-2 mb-8">
+          <section className="welcome-section flex flex-col items-center text-center mt-2 mb-8">
+            <div className="welcome-orb" aria-hidden="true">✦</div>
+            <p className="welcome-kicker">Knowledge itself is power</p>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
               Welcome to the Daly College AI Assistant
             </h1>
@@ -125,8 +127,10 @@ How can I assist you today?`,
                 <button
                   key={i}
                   onClick={() => handleSendMessage(qp.text)}
-                  className="px-5 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                  style={{ animationDelay: `${i * 55}ms` }}
+                  className="prompt-chip px-5 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition"
                 >
+                  <span className="prompt-chip-dot" aria-hidden="true" />
                   {qp.label}
                 </button>
               ))}
@@ -135,7 +139,7 @@ How can I assist you today?`,
         )}
 
         {/* Chat Window */}
-        <ChatWindow messages={messages} />
+        <ChatWindow messages={messages} isLoading={isLoading} />
 
         {error && (
           <div className="flex justify-center mt-4">
