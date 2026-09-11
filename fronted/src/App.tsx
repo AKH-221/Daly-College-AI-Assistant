@@ -88,15 +88,15 @@ How can I assist you today?`,
   );
 
   const quickPrompts = [
-    { label: 'Principal', text: 'Who is the principal of Daly College?' },
-    { label: 'Fee Structure', text: 'Give me the full Daly College fee structure.' },
-    { label: 'Senior Faculty', text: 'List all senior faculty and HODs of Daly College.' },
-    { label: 'Boarding Houses', text: 'Tell me about Daly College boarding houses.' },
-    { label: 'Day Boarding Houses', text: 'Explain Daly College day boarding houses.' },
-    { label: 'Campus', text: 'What are the campus facilities at Daly College?' },
-    { label: 'Admissions', text: 'What is the admission procedure for Daly College?' },
-    { label: 'Board of Governors', text: 'Who are the members of the Board of Governors?' },
-    { label: 'About Daly College', text: 'Tell me about Daly College.' }
+    { label: 'Principal', detail: 'Leadership & vision', text: 'Who is the principal of Daly College?' },
+    { label: 'Fee Structure', detail: 'Plan your journey', text: 'Give me the full Daly College fee structure.' },
+    { label: 'Senior Faculty', detail: 'Meet our educators', text: 'List all senior faculty and HODs of Daly College.' },
+    { label: 'Boarding Houses', detail: 'Life beyond the classroom', text: 'Tell me about Daly College boarding houses.' },
+    { label: 'Day Boarding Houses', detail: 'A home on campus', text: 'Explain Daly College day boarding houses.' },
+    { label: 'Campus', detail: 'Explore the grounds', text: 'What are the campus facilities at Daly College?' },
+    { label: 'Admissions', detail: 'Take the first step', text: 'What is the admission procedure for Daly College?' },
+    { label: 'Board of Governors', detail: 'Stewardship & legacy', text: 'Who are the members of the Board of Governors?' },
+    { label: 'About Daly College', detail: 'Our story', text: 'Tell me about Daly College.' }
   ];
 
   const headerTopics = [
@@ -119,7 +119,11 @@ How can I assist you today?`,
           <section className="welcome-section flex flex-col items-center text-center mt-2 mb-8">
             <div className="welcome-panel">
             <p className="welcome-eyebrow">Daly College · Since 1870</p>
-            <div className="welcome-orb" aria-hidden="true">✦</div>
+            <div className="hero-mark" aria-hidden="true">
+              <span className="hero-mark-line" />
+              <div className="welcome-orb">✦</div>
+              <span className="hero-mark-line" />
+            </div>
             <p className="welcome-kicker">Knowledge itself is power</p>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
               Your intelligent guide to Daly College
@@ -137,16 +141,20 @@ How can I assist you today?`,
             </div>
 
             <p className="prompt-label">Begin your enquiry</p>
-            <div className="flex flex-wrap justify-center gap-3 mt-6">
+            <div className="prompt-grid">
               {quickPrompts.map((qp, i) => (
                 <button
                   key={i}
                   onClick={() => handleSendMessage(qp.text)}
                   style={{ animationDelay: `${i * 55}ms` }}
-                  className="prompt-chip px-5 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+                  className="prompt-chip border border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 text-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition"
                 >
-                  <span className="prompt-chip-dot" aria-hidden="true" />
-                  {qp.label}
+                  <span className="prompt-chip-number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="prompt-chip-copy">
+                    <strong>{qp.label}</strong>
+                    <small>{qp.detail}</small>
+                  </span>
+                  <span className="prompt-chip-arrow" aria-hidden="true">↗</span>
                 </button>
               ))}
             </div>

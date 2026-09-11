@@ -35,6 +35,7 @@ const InputBar: React.FC<InputBarProps> = ({ value, onChange, onSend, isLoading 
       >
         {isLoading ? <LoadingIcon /> : <SendIcon />}
       </button>
+      <span className="input-hint hidden sm:block">↵ Send</span>
     </div>
   );
 };
