@@ -7,7 +7,9 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; background: #1d1715; }
+html { min-width: 320px; background: #1d1715; }
+body { margin: 0; min-width: 320px; min-height: 100%; background: #1d1715; }
+button, input { font: inherit; }
 
 .app-shell {
   position: relative;
@@ -116,6 +118,8 @@ body { margin: 0; min-width: 320px; background: #1d1715; }
 .prompt-chip-arrow { color: #b4874b; font-size: 1rem; opacity: .65; transition: transform .2s ease, opacity .2s ease; }
 .prompt-chip:hover .prompt-chip-arrow { opacity: 1; transform: translate(2px, -2px); }
 .chat-row { color: #f7f0e5; }
+.chat-content { min-width: 0; max-width: min(42rem, calc(100vw - 5rem)); }
+.chat-bubble { overflow-wrap: anywhere; }
 .chat-bubble { border-radius: .2rem !important; }
 .chat-row:not(.justify-end) .chat-bubble { background: #eee5d7 !important; color: #3d3026 !important; }
 .chat-row.justify-end .chat-bubble { background: #9a6e37 !important; color: #fff8eb !important; }
@@ -165,4 +169,28 @@ body { margin: 0; min-width: 320px; background: #1d1715; }
   .site-header { padding: .8rem 1rem; }
   .welcome-eyebrow { margin-bottom: 1rem; }
   .input-prefix { display: none; }
+  .app-footer { padding: .7rem .75rem !important; padding-bottom: max(.7rem, env(safe-area-inset-bottom)) !important; }
+  .input-shell { gap: .35rem; padding: .3rem .35rem .3rem .7rem; }
+  .input-shell input { min-width: 0; padding: .7rem .25rem; font-size: .9rem; }
+  .send-button { flex: 0 0 2.7rem; width: 2.7rem; height: 2.7rem; }
+  .chat-window { gap: 1.15rem; }
+  .chat-row { gap: .5rem; }
+  .chat-content { max-width: calc(100vw - 4.25rem); }
+  .chat-bubble { padding: .7rem .8rem !important; font-size: .88rem; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .prompt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .welcome-panel { width: min(100%, 46rem); }
+}
+@media (max-width: 380px) {
+  .header-logo { width: 2.2rem; height: 2.2rem; }
+  .site-header h1 { font-size: .9rem; }
+  .site-header p { max-width: 11rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .welcome-panel { padding-inline: .7rem; }
+  .prompt-grid { gap: .4rem; }
+  .prompt-chip { min-height: 3.35rem; padding: .45rem .4rem; gap: .4rem; }
+  .prompt-chip-number { font-size: .55rem; }
+  .prompt-chip-copy strong { font-size: .58rem; }
+  .prompt-chip-copy small { font-size: .5rem; }
+  .prompt-chip-arrow { font-size: .8rem; }
 }

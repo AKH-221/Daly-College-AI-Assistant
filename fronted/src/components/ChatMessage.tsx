@@ -36,7 +36,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, index }) => {
       style={{ animationDelay: `${Math.min(index * 70, 350)}ms` }}
     >
       {!isUser && <ModelIcon />}
-      <div className="flex flex-col gap-2">
+      <div className="chat-content flex flex-col gap-2">
         <div
           className={`chat-bubble max-w-lg rounded-xl p-3 shadow-sm ${
             isUser

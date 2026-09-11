@@ -18,7 +18,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading }) => {
   }, [messages]);
 
   return (
-    <div ref={chatWindowRef} className="flex-1 space-y-6 max-w-4xl mx-auto w-full">
+    <div ref={chatWindowRef} className="chat-window flex-1 space-y-6 max-w-4xl mx-auto w-full">
       {messages.map((msg, index) => (
         <ChatMessage key={index} message={msg} index={index} />
       ))}

@@ -106,12 +106,12 @@ How can I assist you today?`,
   ];
 
   return (
-    <div className="app-shell h-screen w-screen flex flex-col">
+    <div className="app-shell min-h-screen h-[100dvh] w-full flex flex-col">
       <Header onTopicSelect={handleSendMessage} topics={headerTopics} />
 
       <main
         ref={scrollContainerRef}
-        className="app-main relative flex-1 overflow-y-auto p-4 md:p-6"
+        className="app-main relative min-h-0 flex-1 overflow-y-auto p-3 sm:p-4 md:p-6"
       >
 
         {/* Welcome Section */}
