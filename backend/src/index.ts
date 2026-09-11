@@ -110,7 +110,7 @@ information and you MUST NOT guess or invent anything.
 - Example for boarding houses:
   - If the data contains only house names but NOT their house masters:
       • List only what is present in the data.
-      • Then clearly say you do not have the rest, and you may then use the standard fallback reply.
+      • Then clearly say you do not have the rest, and you may then use the standard contact block.
   - NEVER make up names or positions from your own memory.
 
 5. QUESTIONS ABOUT BOARDING / HOUSES
@@ -181,8 +181,60 @@ ${dalyDataText}
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
-app.use(express.json());
+// Keep the browser request body small. The assistant only needs a short text message.
+app.use(express.json({ limit: "32kb" }));
+
+// Restrict browser origins when ALLOWED_ORIGINS is configured.
+// During local development, an unset value keeps the previous permissive behavior.
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Origin not allowed by CORS"));
+    },
+  })
+);
+
+// -----------------------------
+// Lightweight in-memory rate limit
+// -----------------------------
+// This is intentionally dependency-free. For multi-instance production deployments,
+// replace it with a shared limiter (for example Redis) so limits apply across instances.
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 30;
+const requestBuckets = new Map<string, { count: number; resetAt: number }>();
+
+app.use("/api/chat", (req: Request, res: Response, next) => {
+  const clientKey = req.ip || "unknown";
+  const now = Date.now();
+  const current = requestBuckets.get(clientKey);
+
+  if (!current || now >= current.resetAt) {
+    requestBuckets.set(clientKey, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return next();
+  }
+
+  if (current.count >= RATE_LIMIT_MAX_REQUESTS) {
+    const retryAfter = Math.max(1, Math.ceil((current.resetAt - now) / 1000));
+    res.setHeader("Retry-After", retryAfter.toString());
+    return res.status(429).json({
+      error: "Too many requests. Please try again shortly.",
+    });
+  }
+
+  current.count += 1;
+  return next();
+});
 
 // Health check
 app.get("/", (_req: Request, res: Response) => {
@@ -200,11 +252,16 @@ app.post("/api/chat", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Missing or invalid 'message'" });
     }
 
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
+      return res.status(400).json({ error: "Message cannot be empty" });
+    }
+
     const result = await model.generateContent({
       contents: [
         {
           role: "user",
-          parts: [{ text: message }],
+          parts: [{ text: trimmedMessage }],
         },
       ],
     });
@@ -215,17 +272,15 @@ app.post("/api/chat", async (req: Request, res: Response) => {
 
     return res.json({ reply });
   } catch (error: any) {
-    console.error("Gemini Error:", error);
+    // Do not expose upstream/provider error details to the browser.
+    console.error("Gemini request failed:", error?.message || error);
     return res.status(500).json({
-      error: "Gemini API error",
-      details: error?.message || error,
+      error: "The assistant is temporarily unavailable. Please try again later.",
     });
   }
 });
 
-// -----------------------------
 // Start server
-// -----------------------------
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on port ${PORT}`);
 });
