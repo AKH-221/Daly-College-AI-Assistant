@@ -3,10 +3,10 @@ import dcLogo from '../assets/logo1.png'; // ✅ Daly College logo
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 shadow-sm sticky top-0 z-10">
-      <div className="max-w-4xl mx-auto flex items-center justify-between">
+    <header className="site-header sticky top-0 z-10">
+      <div className="header-inner max-w-5xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="header-logo w-10 h-10 rounded-full overflow-hidden bg-blue-700 flex items-center justify-center">
+          <div className="header-logo w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
             <img
               src={dcLogo}
               alt="Daly College Logo"
@@ -14,15 +14,20 @@ const Header: React.FC = () => {
             />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-800 dark:text-white">
+            <h1 className="text-lg font-bold">
               Daly College Assistant
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs">
               Gyanamev Shakti (Knowledge itself is Power)
             </p>
           </div>
         </div>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
+        <nav className="header-nav hidden md:flex items-center gap-6" aria-label="Assistant sections">
+          <span>Heritage</span>
+          <span>Campus</span>
+          <span>Admissions</span>
+        </nav>
+        <div className="header-status hidden sm:flex items-center gap-2 text-xs">
           <span className="status-dot" aria-hidden="true" />
           <span>Ready to help</span>
         </div>

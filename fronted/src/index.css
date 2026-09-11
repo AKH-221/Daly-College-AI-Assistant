@@ -1,41 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Playfair+Display:wght@600;700&display=swap');
 
 :root {
   font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   color-scheme: light dark;
+  background: #1d1715;
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
+body { margin: 0; min-width: 320px; background: #1d1715; }
 
-.app-shell { position: relative; isolation: isolate; overflow: hidden; }
+.app-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #f7f0e5;
+  background: #1d1715;
+}
+.app-shell::before { content: ''; position: absolute; inset: 0; z-index: -2; opacity: .18; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,.2) .6px, transparent .6px); background-size: 7px 7px; }
 .app-main { scrollbar-width: thin; scrollbar-color: rgba(37, 99, 235, .25) transparent; }
 .app-main::-webkit-scrollbar { width: .5rem; }
-.app-main::-webkit-scrollbar-thumb { background: rgba(37, 99, 235, .25); border-radius: 99px; }
-.app-footer { box-shadow: 0 -12px 35px rgba(15, 23, 42, .06); }
+.app-main::-webkit-scrollbar-thumb { background: rgba(196, 158, 94, .35); border-radius: 99px; }
+.app-footer { background: #eee5d7 !important; border-color: rgba(92, 64, 38, .18) !important; box-shadow: 0 -12px 35px rgba(0, 0, 0, .15); }
+.site-header { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(238, 229, 215, .16); background: rgba(29, 23, 21, .86); backdrop-filter: blur(16px); }
+.header-inner { gap: 1rem; }
+.site-header h1 { color: #f7f0e5; letter-spacing: -.03em; }
+.site-header p { color: #b9aa99; }
+.header-logo { background: #ad7a38; box-shadow: 0 0 0 1px rgba(246, 218, 163, .28), 0 8px 22px rgba(0, 0, 0, .2); }
+.header-nav { color: #b9aa99; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; }
+.header-nav span { transition: color .2s ease; }
+.header-nav span:hover { color: #e4bd78; }
+.header-status { color: #c8d8b8; }
+.status-dot { background: #9fbd83; box-shadow: 0 0 0 4px rgba(159, 189, 131, .12); }
 .welcome-panel {
   width: min(100%, 54rem);
   padding: clamp(1.35rem, 4vw, 2.5rem);
-  border: 1px solid rgba(148, 163, 184, .2);
-  border-radius: 2rem;
-  background: rgba(255, 255, 255, .57);
-  box-shadow: 0 22px 70px rgba(30, 64, 175, .08);
+  border: 1px solid rgba(196, 158, 94, .4);
+  border-radius: .25rem;
+  background: #eee5d7;
+  color: #2e2521;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .25);
   backdrop-filter: blur(18px);
 }
-.dark .welcome-panel { background: rgba(15, 23, 42, .5); border-color: rgba(148, 163, 184, .15); }
+.welcome-panel::after { content: ''; display: block; width: 4rem; height: 1px; margin: 2rem auto 0; background: #b4874b; }
+.welcome-eyebrow { margin: 0 0 1.3rem; color: #9a6e37; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; }
+.welcome-panel .welcome-kicker { color: #9a6e37; }
+.welcome-panel h1 { color: #2e2521 !important; font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.14; letter-spacing: -.05em; }
+.welcome-panel > p:not(.welcome-kicker):not(.welcome-eyebrow):not(.prompt-label) { color: #6c5b4b !important; line-height: 1.7; }
 .welcome-metrics {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: .5rem 1.3rem;
   margin-top: 1.35rem;
-  color: #64748b;
+  color: #776552;
   font-size: .72rem;
   letter-spacing: .02em;
 }
-.welcome-metrics strong { color: #1d4ed8; font-size: .95rem; margin-right: .2rem; }
-.dark .welcome-metrics { color: #94a3b8; }
-.dark .welcome-metrics strong { color: #93c5fd; }
+.welcome-metrics strong { color: #9a6e37; font-size: .95rem; margin-right: .2rem; }
+.prompt-label { margin: 1.8rem 0 -.8rem; color: #9a6e37; font-size: .65rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .app-shell::before,
 .app-shell::after {
   content: '';
@@ -80,9 +102,22 @@ body { margin: 0; min-width: 320px; }
   align-items: center;
   gap: .5rem;
   animation: chip-in .45s cubic-bezier(.22, 1, .36, 1) both;
+  border-color: rgba(154, 110, 55, .38) !important;
+  background: rgba(255, 250, 241, .64) !important;
+  color: #3d3026 !important;
 }
-.prompt-chip:hover { translate: 0 -3px; box-shadow: 0 8px 18px rgba(37, 99, 235, .12); }
-.prompt-chip-dot { width: .35rem; height: .35rem; border-radius: 50%; background: #60a5fa; }
+.prompt-chip:hover { translate: 0 -3px; box-shadow: 0 8px 18px rgba(95, 60, 25, .16); }
+.prompt-chip-dot { width: .35rem; height: .35rem; border-radius: 50%; background: #b4874b; }
+.chat-row { color: #f7f0e5; }
+.chat-bubble { border-radius: .2rem !important; }
+.chat-row:not(.justify-end) .chat-bubble { background: #eee5d7 !important; color: #3d3026 !important; }
+.chat-row.justify-end .chat-bubble { background: #9a6e37 !important; color: #fff8eb !important; }
+.input-shell { padding: .35rem .45rem .35rem .85rem; border: 1px solid rgba(154, 110, 55, .32); border-radius: .25rem; background: #f8f1e6; box-shadow: 0 12px 28px rgba(75, 49, 24, .1); }
+.input-prefix { color: #9a6e37; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.input-shell input { background: transparent !important; color: #3d3026 !important; }
+.input-shell input::placeholder { color: #a28e78; }
+.send-button { background: #9a6e37 !important; }
+.send-button:not(:disabled):hover { background: #7d572d !important; }
 .message-enter { animation: message-in .45s cubic-bezier(.22, 1, .36, 1) both; }
 .assistant-avatar-pulse { animation: avatar-pulse 2.4s ease-in-out infinite; }
 .header-logo { box-shadow: 0 0 0 0 rgba(37, 99, 235, .4); animation: logo-pulse 3s ease-out infinite; }
@@ -109,4 +144,7 @@ body { margin: 0; min-width: 320px; }
   .welcome-panel { border-radius: 1.35rem; padding: 1.25rem 1rem; }
   .welcome-section h1 { font-size: 1.65rem; line-height: 1.2; }
   .prompt-chip { padding: .6rem .85rem; font-size: .75rem; }
+  .site-header { padding: .8rem 1rem; }
+  .welcome-eyebrow { margin-bottom: 1rem; }
+  .input-prefix { display: none; }
 }

@@ -32,13 +32,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, index }) => {
 
   return (
     <div
-      className={`message-enter flex items-start gap-3 ${isUser ? 'justify-end' : ''}`}
+      className={`message-enter chat-row flex items-start gap-3 ${isUser ? 'justify-end' : ''}`}
       style={{ animationDelay: `${Math.min(index * 70, 350)}ms` }}
     >
       {!isUser && <ModelIcon />}
       <div className="flex flex-col gap-2">
         <div
-          className={`max-w-lg rounded-xl p-3 shadow-sm ${
+          className={`chat-bubble max-w-lg rounded-xl p-3 shadow-sm ${
             isUser
               ? 'bg-blue-600 text-white rounded-br-none'
               : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-bl-none'

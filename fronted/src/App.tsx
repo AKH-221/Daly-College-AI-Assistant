@@ -100,7 +100,7 @@ How can I assist you today?`,
   ];
 
   return (
-    <div className="app-shell bg-slate-100 dark:bg-slate-900 h-screen w-screen flex flex-col">
+    <div className="app-shell h-screen w-screen flex flex-col">
       <Header />
 
       <main
@@ -112,6 +112,7 @@ How can I assist you today?`,
         {showQuickPrompts && (
           <section className="welcome-section flex flex-col items-center text-center mt-2 mb-8">
             <div className="welcome-panel">
+            <p className="welcome-eyebrow">Daly College · Since 1870</p>
             <div className="welcome-orb" aria-hidden="true">✦</div>
             <p className="welcome-kicker">Knowledge itself is power</p>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
@@ -119,9 +120,8 @@ How can I assist you today?`,
             </h1>
 
             <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-2xl mx-auto">
-              Your guide to Daly College academics, admissions, boarding life, campus
-              facilities, heritage, sports, and more. Ask anything or try one of
-              these prompts to get started:
+              Explore the people, places, traditions, and possibilities that make
+              Daly College exceptional. Begin with a question below.
             </p>
 
             <div className="welcome-metrics" aria-label="Assistant capabilities">
@@ -130,6 +130,7 @@ How can I assist you today?`,
               <span><strong>Instant</strong> answers</span>
             </div>
 
+            <p className="prompt-label">Begin your enquiry</p>
             <div className="flex flex-wrap justify-center gap-3 mt-6">
               {quickPrompts.map((qp, i) => (
                 <button
