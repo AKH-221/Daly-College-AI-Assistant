@@ -121,7 +121,11 @@ How can I assist you today?`,
             <p className="welcome-eyebrow">Daly College · Since 1870</p>
             <div className="hero-mark" aria-hidden="true">
               <span className="hero-mark-line" />
-              <div className="welcome-orb">✦</div>
+              <div className="welcome-orb">
+                <span className="orb-ring orb-ring-one" />
+                <span className="orb-ring orb-ring-two" />
+                <span className="orb-star">✦</span>
+              </div>
               <span className="hero-mark-line" />
             </div>
             <p className="welcome-kicker">Knowledge itself is power</p>
