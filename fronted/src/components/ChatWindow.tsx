@@ -23,7 +23,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading }) => {
         <ChatMessage key={index} message={msg} index={index} />
       ))}
       {isLoading && (
-        <div className="flex items-start gap-3 message-enter" aria-label="Assistant is thinking">
+        <div className="flex items-start gap-3 message-enter" role="status" aria-live="polite" aria-label="Assistant is thinking">
           <div className="w-8 h-8 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center assistant-avatar-pulse">
             <span className="text-white text-sm">✦</span>
           </div>

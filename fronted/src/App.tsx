@@ -13,9 +13,10 @@ const App: React.FC = () => {
   // Animated scroll function
   const smoothScrollToBottom = () => {
     if (scrollContainerRef.current) {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       scrollContainerRef.current.scrollTo({
         top: scrollContainerRef.current.scrollHeight,
-        behavior: "smooth"
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
       });
     }
   };
@@ -99,7 +100,7 @@ How can I assist you today?`,
   ];
 
   return (
-    <div className="app-shell bg-slate-100 dark:bg-slate-900 font-sans h-screen w-screen flex flex-col">
+    <div className="app-shell bg-slate-100 dark:bg-slate-900 h-screen w-screen flex flex-col">
       <Header />
 
       <main
@@ -110,17 +111,24 @@ How can I assist you today?`,
         {/* Welcome Section */}
         {showQuickPrompts && (
           <section className="welcome-section flex flex-col items-center text-center mt-2 mb-8">
+            <div className="welcome-panel">
             <div className="welcome-orb" aria-hidden="true">✦</div>
             <p className="welcome-kicker">Knowledge itself is power</p>
             <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-              Welcome to the Daly College AI Assistant
+              Your intelligent guide to Daly College
             </h1>
 
-            <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-2xl">
+            <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-2xl mx-auto">
               Your guide to Daly College academics, admissions, boarding life, campus
               facilities, heritage, sports, and more. Ask anything or try one of
               these prompts to get started:
             </p>
+
+            <div className="welcome-metrics" aria-label="Assistant capabilities">
+              <span><strong>24/7</strong> guidance</span>
+              <span><strong>9+</strong> topics</span>
+              <span><strong>Instant</strong> answers</span>
+            </div>
 
             <div className="flex flex-wrap justify-center gap-3 mt-6">
               {quickPrompts.map((qp, i) => (
@@ -134,6 +142,7 @@ How can I assist you today?`,
                   {qp.label}
                 </button>
               ))}
+            </div>
             </div>
           </section>
         )}
@@ -150,7 +159,7 @@ How can I assist you today?`,
         )}
       </main>
 
-      <footer className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 md:p-6">
+      <footer className="app-footer bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 md:p-6">
         <InputBar
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
