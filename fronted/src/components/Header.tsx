@@ -1,7 +1,17 @@
 import React from 'react';
 import dcLogo from '../assets/logo1.png'; // ✅ Daly College logo
 
-const Header: React.FC = () => {
+interface HeaderTopic {
+  label: string;
+  text: string;
+}
+
+interface HeaderProps {
+  topics: HeaderTopic[];
+  onTopicSelect: (text: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ topics, onTopicSelect }) => {
   return (
     <header className="site-header sticky top-0 z-10">
       <div className="header-inner max-w-5xl mx-auto flex items-center justify-between">
@@ -23,9 +33,16 @@ const Header: React.FC = () => {
           </div>
         </div>
         <nav className="header-nav hidden md:flex items-center gap-6" aria-label="Assistant sections">
-          <span>Heritage</span>
-          <span>Campus</span>
-          <span>Admissions</span>
+          {topics.map((topic) => (
+            <button
+              key={topic.label}
+              type="button"
+              onClick={() => onTopicSelect(topic.text)}
+              className="header-nav-button"
+            >
+              {topic.label}
+            </button>
+          ))}
         </nav>
         <div className="header-status hidden sm:flex items-center gap-2 text-xs">
           <span className="status-dot" aria-hidden="true" />

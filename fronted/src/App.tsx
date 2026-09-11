@@ -99,9 +99,15 @@ How can I assist you today?`,
     { label: 'About Daly College', text: 'Tell me about Daly College.' }
   ];
 
+  const headerTopics = [
+    { label: 'Heritage', text: 'Tell me about Daly College history, heritage, and traditions.' },
+    { label: 'Campus', text: 'What are the campus facilities, sports, and activities at Daly College?' },
+    { label: 'Admissions', text: 'What is the admission procedure and eligibility for Daly College?' },
+  ];
+
   return (
     <div className="app-shell h-screen w-screen flex flex-col">
-      <Header />
+      <Header onTopicSelect={handleSendMessage} topics={headerTopics} />
 
       <main
         ref={scrollContainerRef}

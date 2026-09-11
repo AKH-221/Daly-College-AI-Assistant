@@ -27,8 +27,9 @@ body { margin: 0; min-width: 320px; background: #1d1715; }
 .site-header p { color: #b9aa99; }
 .header-logo { background: #ad7a38; box-shadow: 0 0 0 1px rgba(246, 218, 163, .28), 0 8px 22px rgba(0, 0, 0, .2); }
 .header-nav { color: #b9aa99; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; }
-.header-nav span { transition: color .2s ease; }
-.header-nav span:hover { color: #e4bd78; }
+.header-nav-button { padding: .4rem 0; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; transition: color .2s ease, transform .2s ease; }
+.header-nav-button:hover, .header-nav-button:focus-visible { color: #e4bd78; transform: translateY(-1px); }
+.header-nav-button:focus-visible { outline: 1px solid #e4bd78; outline-offset: .35rem; }
 .header-status { color: #c8d8b8; }
 .status-dot { background: #9fbd83; box-shadow: 0 0 0 4px rgba(159, 189, 131, .12); }
 .welcome-panel {
